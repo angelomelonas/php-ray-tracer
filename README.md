@@ -1,6 +1,13 @@
-# PHP Ray Tracer
+# Basic PHP Project Setup
 
-This is the basic project setup. 
+This is a basic project skeleton for a simple PHP Project using a few Symfony components. 
+The basic setup includes:
+
+- PHPUnit for unit testing
+- Behat for BDD/acceptance testing
+- PHPStan for static analysis
+- PHP CS Fixer for code cleanup
+- Makefile for running tests and static analysis
 
 ## Setup
 
