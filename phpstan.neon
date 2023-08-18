@@ -1,0 +1,11 @@
+parameters:
+    level: max
+    paths:
+        - config
+        - public
+        - src
+        - tests
+    excludePaths:
+        - public/build
+    checkGenericClassInNonGenericObjectType: false
+    treatPhpDocTypesAsCertain: false

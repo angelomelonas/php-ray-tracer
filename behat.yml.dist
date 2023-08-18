@@ -1,0 +1,26 @@
+default:
+  suites:
+    default:
+      contexts:
+        - PhpRayTracer\Tests\Behat\DemoContext
+
+  extensions:
+    FriendsOfBehat\SymfonyExtension:
+      bootstrap: tests/bootstrap.php
+      kernel:
+          class: PhpRayTracer\Kernel
+          path: '%paths.base%/src/Kernel.php'
+          environment: test
+          debug: true
+
+
+
+#  In FileLoader.php line 182:  Expected to find class "PhpRayTracer\Tests\Behat\DemoContext" in file
+#  "/Users/angelo/Development/Repository/php-ray-tracer/tests/Behat/DemoContext.php" while importing services
+#  from resource "../tests/Behat/*", but it was not found! Check the namespace prefix used with the resource in
+#  /Users/angelo/Development/Repository/php-ray-tracer/config/services_test.yaml
+#  (which is being imported from "/Users/angelo/Development/Repository/php-ray-tracer/src/Kernel.php").
+
+#  In FileLoader.php line 282:  Expected to find class "PhpRayTracer\Tests\Behat\DemoContext" in file
+#  "/Users/angelo/Development/Repository/php-ray-tracer/tests/Behat/DemoContext.php" while importing services from resource "../tests/Behat/*",
+#   but it was not found! Check the namespace prefix used with the resource.
