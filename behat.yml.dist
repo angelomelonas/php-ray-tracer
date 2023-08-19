@@ -2,7 +2,9 @@ default:
   suites:
     default:
       contexts:
-        - PhpRayTracer\Tests\Behat\DemoContext
+        - PhpRayTracer\Tests\Behat\TupleContext
+        - PhpRayTracer\Tests\Behat\ColorContext
+        - PhpRayTracer\Tests\Behat\CanvasContext
 
   extensions:
     FriendsOfBehat\SymfonyExtension:
