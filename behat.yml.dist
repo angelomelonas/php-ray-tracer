@@ -5,6 +5,7 @@ default:
         - PhpRayTracer\Tests\Behat\TupleContext
         - PhpRayTracer\Tests\Behat\ColorContext
         - PhpRayTracer\Tests\Behat\CanvasContext
+        - PhpRayTracer\Tests\Behat\MatrixContext
 
   extensions:
     FriendsOfBehat\SymfonyExtension:
