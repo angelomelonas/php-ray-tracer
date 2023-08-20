@@ -2,6 +2,8 @@
 
 namespace PhpRayTracer\RayTracer\Tuple;
 
+use PhpRayTracer\RayTracer\Utility\Utility;
+
 final class Color
 {
     public function __construct(public float $red, public float $green, public float $blue)
@@ -15,14 +17,9 @@ final class Color
 
     public function isEqualTo(Color $color): bool
     {
-        return $this->areFloatsEqual($this->red, $color->red)
-            && $this->areFloatsEqual($this->green, $color->green)
-            && $this->areFloatsEqual($this->blue, $color->blue);
-    }
-
-    private function areFloatsEqual(float $a, float $b): bool
-    {
-        return abs($a - $b) < PHP_FLOAT_EPSILON;
+        return Utility::areFloatsEqual($this->red, $color->red)
+            && Utility::areFloatsEqual($this->green, $color->green)
+            && Utility::areFloatsEqual($this->blue, $color->blue);
     }
 
     public function subtract(Color $color): Color

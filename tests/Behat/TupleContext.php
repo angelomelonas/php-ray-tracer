@@ -11,8 +11,8 @@ use PHPUnit\Framework\Assert;
 
 final class TupleContext implements Context
 {
-    private Tuple $tupleA;
-    private Tuple $tupleB;
+    public Tuple $tupleA;
+    public Tuple $tupleB;
 
     /**
      * @Given /^([^"]+) is a tuple\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/
