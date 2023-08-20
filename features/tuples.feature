@@ -31,6 +31,11 @@ Feature: Tuples, Vectors, and Points
     And a2 is a tuple(-2, 3, 1, 0)
     Then a1 + a2 = tuple(1, 1, 6, 1)
 
+  Scenario: Adding the zero vector to a tuple
+    Given a1 is a tuple(3, -2, 5, 1)
+    And a2 is a tuple(0, 0, 0, 0)
+    Then a1 + a2 = tuple(3, -2, 5, 1)
+
   Scenario: Subtracting two points
     Given p1 is a point(3, 2, 1)
     And p2 is a point(5, 6, 7)
