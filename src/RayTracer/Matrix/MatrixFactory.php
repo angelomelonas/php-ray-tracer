@@ -2,13 +2,16 @@
 
 namespace PhpRayTracer\RayTracer\Matrix;
 
+use PhpRayTracer\RayTracer\Tuple\Tuple;
+
 final class MatrixFactory
 {
     public const MATRIX_2X2 = 2;
     public const MATRIX_3X3 = 3;
     public const MATRIX_4X4 = 4;
 
-    public static function create(int $size): Matrix{
+    public static function create(int $size): Matrix
+    {
         return new Matrix($size);
     }
 
@@ -33,6 +36,76 @@ final class MatrixFactory
         for ($i = 0; $i < $size; $i++) {
             $matrix->set($i, $i, 1);
         }
+
+        return $matrix;
+    }
+
+    public static function createTranslation(float $x, float $y, float $z): Matrix
+    {
+        $size = self::MATRIX_4X4;
+
+        $matrix = self::createIdentity($size);
+        $matrix->set(0, $size - 1, $x);
+        $matrix->set(1, $size - 1, $y);
+        $matrix->set(2, $size - 1, $z);
+        $matrix->set(3, $size - 1, Tuple::POINT);
+
+        return $matrix;
+    }
+
+    public static function createScaling(float $x, float $y, float $z): Matrix
+    {
+        $matrix = self::createIdentity(self::MATRIX_4X4);
+        $matrix->set(0, 0, $x);
+        $matrix->set(1, 1, $y);
+        $matrix->set(2, 2, $z);
+        $matrix->set(3, 3, Tuple::POINT);
+
+        return $matrix;
+    }
+
+    public static function createRotationX(float $angle): Matrix
+    {
+        $matrix = self::createIdentity(self::MATRIX_4X4);
+        $matrix->set(1, 1, cos($angle));
+        $matrix->set(1, 2, -sin($angle));
+        $matrix->set(2, 1, sin($angle));
+        $matrix->set(2, 2, cos($angle));
+
+        return $matrix;
+    }
+
+    public static function createRotationY(float $angle): Matrix
+    {
+        $matrix = self::createIdentity(self::MATRIX_4X4);
+        $matrix->set(0, 0, cos($angle));
+        $matrix->set(0, 2, sin($angle));
+        $matrix->set(2, 0, -sin($angle));
+        $matrix->set(2, 2, cos($angle));
+
+        return $matrix;
+    }
+
+    public static function createRotationZ(float $angle): Matrix
+    {
+        $matrix = self::createIdentity(self::MATRIX_4X4);
+        $matrix->set(0, 0, cos($angle));
+        $matrix->set(0, 1, -sin($angle));
+        $matrix->set(1, 0, sin($angle));
+        $matrix->set(1, 1, cos($angle));
+
+        return $matrix;
+    }
+
+    public static function createShearing(float $xY, float $xZ, float $yX, float $yZ, float $zX, float $zY): Matrix
+    {
+        $matrix = self::createIdentity(self::MATRIX_4X4);
+        $matrix->set(0, 1, $xY);
+        $matrix->set(0, 2, $xZ);
+        $matrix->set(1, 0, $yX);
+        $matrix->set(1, 2, $yZ);
+        $matrix->set(2, 0, $zX);
+        $matrix->set(2, 1, $zY);
 
         return $matrix;
     }
