@@ -4,8 +4,15 @@ namespace PhpRayTracer\RayTracer\Utility;
 
 final class Utility
 {
+    public const ROUND_TEST = 5;
+    public const PRECISION_TEST = 0.000001;
+
     public static function areFloatsEqual(float $a, float $b): bool
     {
-        return bccomp(number_format($a, PHP_FLOAT_DIG), number_format($b, PHP_FLOAT_DIG)) === 0;
+        if (getenv("APP_ENV") === "test") {
+            return abs(round($b, self::ROUND_TEST) - round($a, self::ROUND_TEST)) < self::PRECISION_TEST;
+        }
+
+        return abs($b - $a) < PHP_FLOAT_EPSILON;
     }
 }

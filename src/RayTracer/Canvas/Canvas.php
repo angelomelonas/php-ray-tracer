@@ -23,7 +23,7 @@ final class Canvas
 
     public function writePixel(int $x, int $y, Color $color): void
     {
-        if($x >= 0 && $x < $this->height && $y >= 0 && $y < $this->width){
+        if($x >= 0 && $x < $this->width && $y >= 0 && $y < $this->height){
             $this->pixels[$y][$x] = $color->scale()->clamp();
         }
     }
@@ -32,7 +32,7 @@ final class Canvas
     {
         for ($i = $y - 1; $i <= $y + 1; $i++) {
             for ($j = $x - 1; $j <= $x + 1; $j++) {
-                if($i >= 0 && $i < $this->height && $j >= 0 && $j < $this->width){
+                if($i >= 0 && $i < $this->width && $j >= 0 && $j < $this->height){
                     $this->pixels[$i][$j] = $color->scale()->clamp();
                 }
             }

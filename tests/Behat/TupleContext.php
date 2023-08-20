@@ -13,6 +13,8 @@ final class TupleContext implements Context
 {
     public Tuple $tupleA;
     public Tuple $tupleB;
+    public Tuple $tupleC;
+    public Tuple $tupleD;
 
     /**
      * @Given /^([^"]+) is a tuple\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/
@@ -226,6 +228,18 @@ final class TupleContext implements Context
 
         if (!isset($this->tupleB)) {
             $this->tupleB = TupleFactory::create($x, $y, $z, $w);
+
+            return;
+        }
+
+        if (!isset($this->tupleC)) {
+            $this->tupleC = TupleFactory::create($x, $y, $z, $w);
+
+            return;
+        }
+
+        if (!isset($this->tupleD)) {
+            $this->tupleD = TupleFactory::create($x, $y, $z, $w);
 
             return;
         }
