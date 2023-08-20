@@ -2,6 +2,8 @@
 
 namespace PhpRayTracer\RayTracer\Tuple;
 
+use PhpRayTracer\RayTracer\Utility\Utility;
+
 class Tuple
 {
     public const POINT = 1.0;
@@ -23,15 +25,10 @@ class Tuple
 
     public function isEqualTo(Tuple $tuple): bool
     {
-        return $this->areFloatsEqual($this->x, $tuple->x)
-            && $this->areFloatsEqual($this->y, $tuple->y)
-            && $this->areFloatsEqual($this->z, $tuple->z)
-            && $this->areFloatsEqual($this->w, $tuple->w);
-    }
-
-    private function areFloatsEqual(float $a, float $b): bool
-    {
-        return abs($a - $b) < PHP_FLOAT_EPSILON;
+        return Utility::areFloatsEqual($this->x, $tuple->x)
+            && Utility::areFloatsEqual($this->y, $tuple->y)
+            && Utility::areFloatsEqual($this->z, $tuple->z)
+            && Utility::areFloatsEqual($this->w, $tuple->w);
     }
 
     public function add(Tuple $tuple): Tuple
@@ -125,6 +122,6 @@ class Tuple
 
     public function __toString(): string
     {
-        return sprintf( "(%.2f, %.2f, %.2f)", $this->x, $this->y, $this->z);
+        return sprintf("(%.2f, %.2f, %.2f)", $this->x, $this->y, $this->z);
     }
 }
