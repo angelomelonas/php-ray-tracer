@@ -23,7 +23,20 @@ final class Canvas
 
     public function writePixel(int $x, int $y, Color $color): void
     {
-        $this->pixels[$y][$x] = $color->scale()->clamp();
+        if($x >= 0 && $x < $this->height && $y >= 0 && $y < $this->width){
+            $this->pixels[$y][$x] = $color->scale()->clamp();
+        }
+    }
+
+    public function writePixelCluster(int $x, int $y, Color $color): void
+    {
+        for ($i = $y - 1; $i <= $y + 1; $i++) {
+            for ($j = $x - 1; $j <= $x + 1; $j++) {
+                if($i >= 0 && $i < $this->height && $j >= 0 && $j < $this->width){
+                    $this->pixels[$i][$j] = $color->scale()->clamp();
+                }
+            }
+        }
     }
 
     public function writeAllPixels(Color $color): void
