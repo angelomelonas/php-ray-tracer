@@ -6,6 +6,9 @@ default:
         - PhpRayTracer\Tests\Behat\ColorContext
         - PhpRayTracer\Tests\Behat\CanvasContext
         - PhpRayTracer\Tests\Behat\MatrixContext
+        - PhpRayTracer\Tests\Behat\RayContext
+        - PhpRayTracer\Tests\Behat\SphereContext
+        - PhpRayTracer\Tests\Behat\IntersectionContext
 
   extensions:
     FriendsOfBehat\SymfonyExtension:
