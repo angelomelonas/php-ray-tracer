@@ -7,7 +7,7 @@ use PhpRayTracer\RayTracer\Projectiles\World;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 
-require 'vendor/autoload.php';
+require '../../vendor/autoload.php';
 
 $projectile = new Projectile(
     TupleFactory::createPoint(0, 1, 0),
