@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Projectiles;
 
@@ -6,7 +7,6 @@ final class World
 {
     public function __construct()
     {
-
     }
 
     public function tick(Projectile $projectile, Environment $environment): Projectile

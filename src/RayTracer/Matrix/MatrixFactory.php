@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Matrix;
 
 use PhpRayTracer\RayTracer\Tuple\Tuple;
+use function cos;
+use function sin;
 
 final class MatrixFactory
 {

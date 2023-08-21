@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Matrix;
 
@@ -6,14 +7,13 @@ use _PHPStan_7c8075089\Symfony\Component\Console\Exception\LogicException;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PhpRayTracer\RayTracer\Utility\Utility;
+use function array_fill;
 
 final class Matrix
 {
     public const ZERO_VALUE = 0.0;
 
-    /**
-     * @var array<array<float>>
-     */
+    /** @var array<array<float>> */
     public array $matrix = [];
 
     public function __construct(public int $size)
@@ -57,7 +57,9 @@ final class Matrix
 
         for ($row = 0; $row < $this->size; $row++) {
             for ($column = 0; $column < $this->size; $column++) {
-                $newMatrix->set($row, $column,
+                $newMatrix->set(
+                    $row,
+                    $column,
                     $this->matrix[$row][0] * $matrix->matrix[0][$column]
                     + $this->matrix[$row][1] * $matrix->matrix[1][$column]
                     + $this->matrix[$row][2] * $matrix->matrix[2][$column]
@@ -128,6 +130,7 @@ final class Matrix
                         $subMatrixColumn++;
                     }
                 }
+
                 $subMatrixRow++;
             }
         }
