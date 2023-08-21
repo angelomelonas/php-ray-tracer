@@ -1,8 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Tuple;
 
 use PhpRayTracer\RayTracer\Utility\Utility;
+use function pow;
+use function sprintf;
+use function sqrt;
 
 class Tuple
 {
@@ -122,6 +126,6 @@ class Tuple
 
     public function __toString(): string
     {
-        return sprintf("(%.2f, %.2f, %.2f)", $this->x, $this->y, $this->z);
+        return sprintf('(%.2f, %.2f, %.2f)', $this->x, $this->y, $this->z);
     }
 }

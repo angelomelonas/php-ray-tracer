@@ -1,8 +1,7 @@
 <?php
+declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Tuple;
-
-use LogicException;
 
 final class TupleFactory
 {

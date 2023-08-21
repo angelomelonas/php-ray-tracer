@@ -1,8 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Tuple;
 
 use PhpRayTracer\RayTracer\Utility\Utility;
+use function max;
+use function min;
+use function round;
+use function sprintf;
 
 final class Color
 {

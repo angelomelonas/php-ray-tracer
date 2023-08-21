@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Projectiles;
 
@@ -8,6 +9,5 @@ final class Projectile
 {
     public function __construct(public Tuple $position, public Tuple $velocity)
     {
-
     }
 }

@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Canvas;
 
 use PhpRayTracer\RayTracer\Tuple\Color;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
+use function array_fill;
+use function implode;
+use function wordwrap;
+use const PHP_EOL;
 
 final class Canvas
 {
@@ -23,7 +28,7 @@ final class Canvas
 
     public function writePixel(int $x, int $y, Color $color): void
     {
-        if($x >= 0 && $x < $this->width && $y >= 0 && $y < $this->height){
+        if ($x >= 0 && $x < $this->width && $y >= 0 && $y < $this->height) {
             $this->pixels[$y][$x] = $color->scale()->clamp();
         }
     }
@@ -32,7 +37,7 @@ final class Canvas
     {
         for ($i = $y - 1; $i <= $y + 1; $i++) {
             for ($j = $x - 1; $j <= $x + 1; $j++) {
-                if($i >= 0 && $i < $this->width && $j >= 0 && $j < $this->height){
+                if ($i >= 0 && $i < $this->width && $j >= 0 && $j < $this->height) {
                     $this->pixels[$i][$j] = $color->scale()->clamp();
                 }
             }
@@ -59,14 +64,15 @@ final class Canvas
         }
 
         $output = implode(PHP_EOL, $formattedLines);
+
         return $header . $output . PHP_EOL;
     }
 
     private function getPPMHeader(): string
     {
-        $header = "P3" . PHP_EOL;
+        $header = 'P3' . PHP_EOL;
         $header .= "{$this->width} {$this->height}" . PHP_EOL;
-        $header .= "255" . PHP_EOL;
+        $header .= '255' . PHP_EOL;
 
         return $header;
     }
