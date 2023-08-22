@@ -9,7 +9,7 @@ use PhpRayTracer\RayTracer\Intersection\Intersections;
 use PhpRayTracer\RayTracer\Material\MaterialFactory;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
 use PhpRayTracer\RayTracer\Matrix\MatrixFactory;
-use PhpRayTracer\RayTracer\Sphere\Sphere;
+use PhpRayTracer\RayTracer\Object\Sphere;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PHPUnit\Framework\Assert;

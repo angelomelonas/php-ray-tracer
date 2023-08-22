@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Intersection;
 
-use PhpRayTracer\RayTracer\Sphere\Sphere;
+use PhpRayTracer\RayTracer\Object\Sphere;
 
 final class IntersectionFactory
 {

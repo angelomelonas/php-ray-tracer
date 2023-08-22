@@ -2,8 +2,8 @@
 
 use PhpRayTracer\RayTracer\Canvas\Canvas;
 use PhpRayTracer\RayTracer\Matrix\MatrixFactory;
+use PhpRayTracer\RayTracer\Object\Sphere;
 use PhpRayTracer\RayTracer\Ray\RayFactory;
-use PhpRayTracer\RayTracer\Sphere\Sphere;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 

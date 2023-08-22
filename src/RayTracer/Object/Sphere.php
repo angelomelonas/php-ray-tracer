@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PhpRayTracer\RayTracer\Sphere;
+namespace PhpRayTracer\RayTracer\Object;
 
 use PhpRayTracer\RayTracer\Intersection\IntersectionFactory;
 use PhpRayTracer\RayTracer\Intersection\Intersections;

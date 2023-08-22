@@ -9,7 +9,7 @@ use LogicException;
 use PhpRayTracer\RayTracer\Intersection\Intersection;
 use PhpRayTracer\RayTracer\Intersection\IntersectionFactory;
 use PhpRayTracer\RayTracer\Intersection\Intersections;
-use PhpRayTracer\RayTracer\Sphere\Sphere;
+use PhpRayTracer\RayTracer\Object\Sphere;
 use PHPUnit\Framework\Assert;
 
 final class IntersectionContext implements Context
