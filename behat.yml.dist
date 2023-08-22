@@ -9,6 +9,8 @@ default:
         - PhpRayTracer\Tests\Behat\RayContext
         - PhpRayTracer\Tests\Behat\SphereContext
         - PhpRayTracer\Tests\Behat\IntersectionContext
+        - PhpRayTracer\Tests\Behat\LightContext
+        - PhpRayTracer\Tests\Behat\MaterialContext
 
   extensions:
     FriendsOfBehat\SymfonyExtension:

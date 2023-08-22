@@ -69,6 +69,18 @@ final class TupleContext implements Context
         $this->createTuple($x, $y, $z, Tuple::VECTOR);
     }
 
+    /** @Given /^([^"]+) is a vector\((0), (√2\/2), (-√2\/2)\)$/ */
+    public function vIsAVector0SquareRoot2(): void
+    {
+        $this->createTuple(0, sqrt(2) / 2, -sqrt(2) / 2, Tuple::VECTOR);
+    }
+
+    /** @Given /^([^"]+) is a vector\((0), (-√2\/2), (-√2\/2)\)$/ */
+    public function vIsAVector0NegativeSquareRoot2(): void
+    {
+        $this->createTuple(0, -sqrt(2) / 2, -sqrt(2) / 2, Tuple::VECTOR);
+    }
+
     /** @Then /^(p|v) = tuple\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
     public function pIsATuple(string $expression, float $x, float $y, float $z, float $w): void
     {
@@ -171,6 +183,24 @@ final class TupleContext implements Context
     {
         $result = $this->tupleB->cross($this->tupleA);
         Assert::assertTrue(TupleFactory::createVector($x, $y, $z)->isEqualTo($result));
+    }
+
+    /** @When /^(r) is a reflect\((v), (n)\)$/ */
+    public function rIsAReflectVN(): void
+    {
+        $this->tupleC = $this->tupleA->reflect($this->tupleB);
+    }
+
+    /** @Then /^(r) = vector\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
+    public function rIsAVector(string $expression, float $x, float $y, float $z): void
+    {
+        Assert::assertTrue(TupleFactory::createVector($x, $y, $z)->isEqualTo($this->tupleC));
+    }
+
+    /** @Given /^(n) is a vector\((√2\/2), (√2\/2), (0)\)$/ */
+    public function nIsAVector2(): void
+    {
+        $this->tupleB = TupleFactory::createVector(sqrt(2) / 2, sqrt(2) / 2, 0);
     }
 
     private function createTuple(float $x, float $y, float $z, float $w): void

@@ -6,19 +6,27 @@ namespace PhpRayTracer\Tests\Behat;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use PhpRayTracer\RayTracer\Intersection\Intersections;
+use PhpRayTracer\RayTracer\Material\MaterialFactory;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
 use PhpRayTracer\RayTracer\Matrix\MatrixFactory;
 use PhpRayTracer\RayTracer\Sphere\Sphere;
+use PhpRayTracer\RayTracer\Tuple\Tuple;
+use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PHPUnit\Framework\Assert;
+use function sqrt;
+use const M_PI;
 
 final class SphereContext implements Context
 {
     public Sphere $sphere;
     public Intersections $intersections;
 
-    public Matrix $translationMatrix;
+    public Tuple $normal;
+
+    public Matrix $transformationMatrix;
 
     private RayContext $rayContext;
+    private MaterialContext $materialContext;
 
     /** @BeforeScenario */
     public function gatherContexts(BeforeScenarioScope $scope): void
@@ -27,6 +35,8 @@ final class SphereContext implements Context
 
         /* @phpstan-ignore-next-line */
         $this->rayContext = $environment->getContext(RayContext::class);
+        /* @phpstan-ignore-next-line */
+        $this->materialContext = $environment->getContext(MaterialContext::class);
     }
 
     /** @Given /^(s) is a sphere\(\)$/ */
@@ -70,19 +80,19 @@ final class SphereContext implements Context
     /** @Given /^(t) is a translation\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
     public function transformIsATranslation(string $expression, float $x, float $y, float $z): void
     {
-        $this->translationMatrix = MatrixFactory::createTranslation($x, $y, $z);
+        $this->transformationMatrix = MatrixFactory::createTranslation($x, $y, $z);
     }
 
     /** @When /^set_transform\((s), (t)\)$/ */
     public function setSphereTransform(): void
     {
-        $this->sphere->setTransform($this->translationMatrix);
+        $this->sphere->setTransform($this->transformationMatrix);
     }
 
     /** @Then /^(s)\.transform = (t)$/ */
     public function sTransformIsT(): void
     {
-        Assert::assertTrue($this->translationMatrix->isEqualTo($this->sphere->getTransform()));
+        Assert::assertTrue($this->transformationMatrix->isEqualTo($this->sphere->getTransform()));
     }
 
     /** @When /^set_transform\(s, scaling\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)\)$/ */
@@ -103,166 +113,84 @@ final class SphereContext implements Context
         Assert::assertSame($value, $this->intersections->get($index)->getT());
     }
 
-//    /**
-//     * @When /^set_transform\(s, translation\(5, (\d+), 0\)\)$/
-//     */
-//    public function set_transformSTranslation0($arg1, $arg2)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @When /^n is a normal_at\(s, point\(1, (\d+), 0\)\)$/
-//     */
-//    public function nIsANormal_atSPoint0($arg1, $arg2)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Then /^n = vector\(1, (\d+), 0\)$/
-//     */
-//    public function nVector0($arg1, $arg2)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @When /^n is a normal_at\(s, point\(0, (\d+), 1\)\)$/
-//     */
-//    public function nIsANormal_atSPoint1($arg1, $arg2)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Then /^n = vector\(0, (\d+), 1\)$/
-//     */
-//    public function nVector1($arg1, $arg2)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @When /^n is a normal_at\(s, point\(√3\/3, √3\/3, √3\/3\)\)$/
-//     */
-//    public function nIsANormal_atSPoint3333($arg1, $arg2)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Then /^n = vector\(√3\/3, √3\/3, √3\/3\)$/
-//     */
-//    public function nVector3333($arg1, $arg2)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Then /^n = normalize\(n\)$/
-//     */
-//    public function nNormalizeN()
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @When /^n is a normal_at\(s, point\(0, (\d+)\.(\d+), \-0\.70711\)\)$/
-//     */
-//    public function nIsANormal_atSPoint70711($arg1, $arg2, $arg3, $arg4)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Then /^n = vector\(0, (\d+)\.(\d+), \-0\.70711\)$/
-//     */
-//    public function nVector70711($arg1, $arg2, $arg3, $arg4)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Given /^m is a scaling\(1, (\d+)\.(\d+), 1\) \* rotation_z\(π\/5\)$/
-//     */
-//    public function mIsAScaling1Rotation_zΠ5($arg1, $arg2, $arg3)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Given /^set_transform\(s, m\)$/
-//     */
-//    public function set_transformSM()
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @When /^n is a normal_at\(s, point\(0, √2\/2, \-√2\/2\)\)$/
-//     */
-//    public function nIsANormal_atSPoint222($arg1, $arg2)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Then /^n = vector\(0, (\d+)\.(\d+), \-0\.24254\)$/
-//     */
-//    public function nVector24254($arg1, $arg2, $arg3, $arg4)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @When /^m is a s\.material$/
-//     */
-//    public function mIsASMaterial()
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Then /^m = material\(\)$/
-//     */
-//    public function mMaterial()
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Given /^m is a material\(\)$/
-//     */
-//    public function mIsAMaterial()
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Given /^m\.ambient is a (\d+)$/
-//     */
-//    public function mAmbientIsA($arg1)
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @When /^s\.material is a m$/
-//     */
-//    public function sMaterialIsAM()
-//    {
-//        throw new PendingException();
-//    }
-//
-//    /**
-//     * @Then /^s\.material = m$/
-//     */
-//    public function sMaterialM()
-//    {
-//        throw new PendingException();
-//    }
-//
+    /** @When /^(n) is a normal_at\((s), point\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)\)$/ */
+    public function nIsANormalAtPoint(string $expression, string $sphere, float $x, float $y, float $z): void
+    {
+        $this->normal = $this->sphere->normalAt(TupleFactory::createPoint($x, $y, $z));
+    }
+
+    /** @Then /^(n) = vector\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
+    public function nIsAVector(string $expression, float $x, float $y, float $z): void
+    {
+        Assert::assertTrue(TupleFactory::createVector($x, $y, $z)->isEqualTo($this->normal));
+    }
+
+    /** @When /^(n) is a normal_at\((s), point\((√3\/3), (√3\/3), (√3\/3)\)\)$/ */
+    public function nIsANormalAtPoint3(): void
+    {
+        $this->normal = $this->sphere->normalAt(TupleFactory::createPoint(sqrt(3) / 3, sqrt(3) / 3, sqrt(3) / 3));
+    }
+
+    /** @Then /^(n) = vector\((√3\/3), (√3\/3), (√3\/3)\)$/ */
+    public function nIsAVector3(): void
+    {
+        Assert::assertTrue(TupleFactory::createVector(sqrt(3) / 3, sqrt(3) / 3, sqrt(3) / 3)->isEqualTo($this->normal));
+    }
+
+    /** @Then /^(n) = normalize\((n)\)$/ */
+    public function nNormalizeN(): void
+    {
+        Assert::assertTrue($this->normal->normalize()->isEqualTo($this->normal));
+    }
+
+    /** @Given /^(m) is a scaling\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\) \* rotation_z\((π\/5)\)$/ */
+    public function mIsAScalingAndARotation(string $expression, float $x, float $y, float $z): void
+    {
+        $this->transformationMatrix = MatrixFactory::createScaling($x, $y, $z)->multiplyMatrix(MatrixFactory::createRotationZ(M_PI / 5));
+    }
+
+    /** @Given /^set_transform\((s), (m)\)$/ */
+    public function setTransformOnSphere(): void
+    {
+        $this->sphere->setTransform($this->transformationMatrix);
+    }
+
+    /** @When /^(n) is a normal_at\((s), point\(0, √2\/2, \-√2\/2\)\)$/ */
+    public function nIsANormalAtPoint2(): void
+    {
+        $this->normal = $this->sphere->normalAt(TupleFactory::createPoint(0, sqrt(2) / 2, -sqrt(2) / 2));
+    }
+
+    /** @When /^(m) is a (s)\.material$/ */
+    public function mIsASMaterial(): void
+    {
+        $this->materialContext->material = $this->sphere->getMaterial();
+    }
+
+    /** @Then /^(m) = material\(\)$/ */
+    public function mMaterialIsTheDefaultMaterial(): void
+    {
+        Assert::assertEquals(MaterialFactory::create(), $this->materialContext->material);
+    }
+
+    /** @When /^(m)\.ambient is a (\d+)$/ */
+    public function mMaterialAmbientIs(string $expression, int $value): void
+    {
+        $this->materialContext->material->ambient = $value;
+    }
+
+    /** @When /^s\.material is a (m)$/ */
+    public function sMaterialIsAM(): void
+    {
+        $this->sphere->setMaterial($this->materialContext->material);
+    }
+
+    /** @Then /^s\.material = (m)$/ */
+    public function sMaterialM(): void
+    {
+        Assert::assertEquals($this->materialContext->material, $this->sphere->getMaterial());
+    }
+
 //    /**
 //     * @Given /^s is a glass_sphere\(\)$/
 //     */

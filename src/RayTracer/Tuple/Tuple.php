@@ -128,4 +128,9 @@ class Tuple
     {
         return sprintf('(%.2f, %.2f, %.2f)', $this->x, $this->y, $this->z);
     }
+
+    public function reflect(Tuple $tuple): Tuple
+    {
+        return $this->subtract($tuple->multiply(2 * $this->dot($tuple)));
+    }
 }
