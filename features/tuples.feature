@@ -116,14 +116,14 @@ Feature: Tuples, Vectors, and Points
     Then cross(a, b) = vector(-1, 2, -1)
     And cross(b, a) = vector(1, -2, 1)
 
-#  Scenario: Reflecting a vector approaching at 45°
-#    Given v is a vector(1, -1, 0)
-#    And n is a vector(0, 1, 0)
-#    When r is a reflect(v, n)
-#    Then r = vector(1, 1, 0)
-#
-#  Scenario: Reflecting a vector off a slanted surface
-#    Given v is a vector(0, -1, 0)
-#    And n is a vector(√2/2, √2/2, 0)
-#    When r is a reflect(v, n)
-#    Then r = vector(1, 0, 0)
+  Scenario: Reflecting a vector approaching at 45°
+    Given v is a vector(1, -1, 0)
+    And n is a vector(0, 1, 0)
+    When r is a reflect(v, n)
+    Then r = vector(1, 1, 0)
+
+  Scenario: Reflecting a vector off a slanted surface
+    Given v is a vector(0, -1, 0)
+    And n is a vector(√2/2, √2/2, 0)
+    When r is a reflect(v, n)
+    Then r = vector(1, 0, 0)

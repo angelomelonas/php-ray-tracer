@@ -72,56 +72,56 @@ Feature: Spheres
     And xs is a intersect(s, r)
     Then xs.count = 0
 
-#  Scenario: The normal on a sphere at a point on the x axis
-#    Given s is a sphere()
-#    When n is a normal_at(s, point(1, 0, 0))
-#    Then n = vector(1, 0, 0)
-#
-#  Scenario: The normal on a sphere at a point on the y axis
-#    Given s is a sphere()
-#    When n is a normal_at(s, point(0, 1, 0))
-#    Then n = vector(0, 1, 0)
-#
-#  Scenario: The normal on a sphere at a point on the z axis
-#    Given s is a sphere()
-#    When n is a normal_at(s, point(0, 0, 1))
-#    Then n = vector(0, 0, 1)
-#
-#  Scenario: The normal on a sphere at a nonaxial point
-#    Given s is a sphere()
-#    When n is a normal_at(s, point(√3/3, √3/3, √3/3))
-#    Then n = vector(√3/3, √3/3, √3/3)
-#
-#  Scenario: The normal is a normalized vector
-#    Given s is a sphere()
-#    When n is a normal_at(s, point(√3/3, √3/3, √3/3))
-#    Then n = normalize(n)
-#
-#  Scenario: Computing the normal on a translated sphere
-#    Given s is a sphere()
-#    And set_transform(s, translation(0, 1, 0))
-#    When n is a normal_at(s, point(0, 1.70711, -0.70711))
-#    Then n = vector(0, 0.70711, -0.70711)
-#
-#  Scenario: Computing the normal on a transformed sphere
-#    Given s is a sphere()
-#    And m is a scaling(1, 0.5, 1) * rotation_z(π/5)
-#    And set_transform(s, m)
-#    When n is a normal_at(s, point(0, √2/2, -√2/2))
-#    Then n = vector(0, 0.97014, -0.24254)
-#
-#  Scenario: A sphere has a default material
-#    Given s is a sphere()
-#    When m is a s.material
-#    Then m = material()
-#
-#  Scenario: A sphere may be assigned a material
-#    Given s is a sphere()
-#    And m is a material()
-#    And m.ambient is a 1
-#    When s.material is a m
-#    Then s.material = m
-#
+  Scenario: The normal on a sphere at a point on the x axis
+    Given s is a sphere()
+    When n is a normal_at(s, point(1, 0, 0))
+    Then n = vector(1, 0, 0)
+
+  Scenario: The normal on a sphere at a point on the y axis
+    Given s is a sphere()
+    When n is a normal_at(s, point(0, 1, 0))
+    Then n = vector(0, 1, 0)
+
+  Scenario: The normal on a sphere at a point on the z axis
+    Given s is a sphere()
+    When n is a normal_at(s, point(0, 0, 1))
+    Then n = vector(0, 0, 1)
+
+  Scenario: The normal on a sphere at a nonaxial point
+    Given s is a sphere()
+    When n is a normal_at(s, point(√3/3, √3/3, √3/3))
+    Then n = vector(√3/3, √3/3, √3/3)
+
+  Scenario: The normal is a normalized vector
+    Given s is a sphere()
+    When n is a normal_at(s, point(√3/3, √3/3, √3/3))
+    Then n = normalize(n)
+
+  Scenario: Computing the normal on a translated sphere
+    Given s is a sphere()
+    And set_transform(s, translation(0, 1, 0))
+    When n is a normal_at(s, point(0, 1.70711, -0.70711))
+    Then n = vector(0, 0.70711, -0.70711)
+
+  Scenario: Computing the normal on a transformed sphere
+    Given s is a sphere()
+    And m is a scaling(1, 0.5, 1) * rotation_z(π/5)
+    And set_transform(s, m)
+    When n is a normal_at(s, point(0, √2/2, -√2/2))
+    Then n = vector(0, 0.97014, -0.24254)
+
+  Scenario: A sphere has a default material
+    Given s is a sphere()
+    When m is a s.material
+    Then m = material()
+
+  Scenario: A sphere may be assigned a material
+    Given s is a sphere()
+    And m is a material()
+    And m.ambient is a 1
+    When s.material is a m
+    Then s.material = m
+
 #  Scenario: A helper for producing a sphere with a glassy material
 #    Given s is a glass_sphere()
 #    Then s.transform = identity_matrix

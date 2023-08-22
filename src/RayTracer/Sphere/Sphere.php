@@ -5,6 +5,8 @@ namespace PhpRayTracer\RayTracer\Sphere;
 
 use PhpRayTracer\RayTracer\Intersection\IntersectionFactory;
 use PhpRayTracer\RayTracer\Intersection\Intersections;
+use PhpRayTracer\RayTracer\Material\Material;
+use PhpRayTracer\RayTracer\Material\MaterialFactory;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
 use PhpRayTracer\RayTracer\Matrix\MatrixFactory;
 use PhpRayTracer\RayTracer\Ray\Ray;
@@ -19,11 +21,33 @@ final class Sphere
 {
     public Tuple $origin;
     public Matrix $transformationMatrix;
+    private Material $material;
 
     public function __construct()
     {
         $this->origin = TupleFactory::createPoint(0, 0, 0);
         $this->transformationMatrix = MatrixFactory::createIdentity(MatrixFactory::MATRIX_4X4);
+        $this->material = MaterialFactory::create();
+    }
+
+    public function getTransform(): Matrix
+    {
+        return $this->transformationMatrix;
+    }
+
+    public function setTransform(Matrix $matrix): Matrix
+    {
+        return $this->transformationMatrix = $matrix;
+    }
+
+    public function getMaterial(): Material
+    {
+        return $this->material;
+    }
+
+    public function setMaterial(Material $material): Material
+    {
+        return $this->material = $material;
     }
 
     public function intersect(Ray $ray): Intersections
@@ -53,13 +77,13 @@ final class Sphere
         ]);
     }
 
-    public function getTransform(): Matrix
+    public function normalAt(Tuple $point): Tuple
     {
-        return $this->transformationMatrix;
-    }
+        $objectPoint = $this->getTransform()->inverse()->multiplyTuple($point);
+        $objectNormal = $objectPoint->subtract(TupleFactory::createPoint(0, 0, 0));
+        $worldNormal = $this->getTransform()->inverse()->transpose()->multiplyTuple($objectNormal);
+        $worldNormal->w = 0;
 
-    public function setTransform(Matrix $matrix): Matrix
-    {
-        return $this->transformationMatrix = $matrix;
+        return $worldNormal->normalize();
     }
 }
