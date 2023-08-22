@@ -24,6 +24,7 @@ $shape->setTransform(MatrixFactory::createRotationZ(M_PI / 4)->multiplyMatrix(Ma
 $rayOrigin = TupleFactory::createPoint(0, 0, -5);
 $startTime = microtime(true);
 for ($y = 0; $y < $canvasPixels - 1; $y++) {
+    echo sprintf('Calculating row %s/%s', $y, $canvasPixels - 1) . PHP_EOL;
     $worldY = $half - ($pixelSize * $y);
     for ($x = 0; $x < $canvasPixels - 1; $x++) {
         $worldX = -$half + ($pixelSize * $x);

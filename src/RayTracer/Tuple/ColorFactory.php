@@ -9,4 +9,14 @@ final class ColorFactory
     {
         return new Color($red, $green, $blue);
     }
+
+    public static function createBlack(): Color
+    {
+        return new Color(0, 0, 0);
+    }
+
+    public static function createWhite(): Color
+    {
+        return new Color(1, 1, 1);
+    }
 }

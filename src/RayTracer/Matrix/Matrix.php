@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Matrix;
 
-use _PHPStan_7c8075089\Symfony\Component\Console\Exception\LogicException;
+use LogicException;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PhpRayTracer\RayTracer\Utility\Utility;
