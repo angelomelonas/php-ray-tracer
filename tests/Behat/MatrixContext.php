@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace PhpRayTracer\Tests\Behat;
 
-use _PHPStan_7c8075089\Symfony\Component\Console\Exception\LogicException;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
+use LogicException;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
 use PhpRayTracer\RayTracer\Matrix\MatrixFactory;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;

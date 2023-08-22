@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace PhpRayTracer\Tests\Behat;
 
-use _PHPStan_7c8075089\Symfony\Component\Console\Exception\LogicException;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use LogicException;
 use PhpRayTracer\RayTracer\Intersection\Intersection;
 use PhpRayTracer\RayTracer\Intersection\IntersectionFactory;
 use PhpRayTracer\RayTracer\Intersection\Intersections;

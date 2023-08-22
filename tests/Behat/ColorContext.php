@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace PhpRayTracer\Tests\Behat;
 
-use _PHPStan_7c8075089\Symfony\Component\Console\Exception\LogicException;
 use Behat\Behat\Context\Context;
+use LogicException;
 use PhpRayTracer\RayTracer\Tuple\Color;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
 use PHPUnit\Framework\Assert;
 
 final class ColorContext implements Context
 {
-    private Color $colorA;
-    private Color $colorB;
+    public Color $colorA;
+    public Color $colorB;
 
     /** @Given /^([^"]+) is a color\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
     public function cIsAColor(string $expression, float $red, float $green, float $blue): void
