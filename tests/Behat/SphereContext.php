@@ -9,7 +9,7 @@ use PhpRayTracer\RayTracer\Intersection\Intersections;
 use PhpRayTracer\RayTracer\Material\MaterialFactory;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
 use PhpRayTracer\RayTracer\Matrix\MatrixFactory;
-use PhpRayTracer\RayTracer\Object\Sphere;
+use PhpRayTracer\RayTracer\Shape\Sphere;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PHPUnit\Framework\Assert;
@@ -19,7 +19,6 @@ use const M_PI;
 final class SphereContext implements Context
 {
     public Sphere $sphere;
-    public Intersections $intersections;
 
     public Tuple $normal;
 
@@ -27,6 +26,8 @@ final class SphereContext implements Context
 
     private RayContext $rayContext;
     private MaterialContext $materialContext;
+
+    private IntersectionContext $intersectionContext;
 
     /** @BeforeScenario */
     public function gatherContexts(BeforeScenarioScope $scope): void
@@ -37,9 +38,11 @@ final class SphereContext implements Context
         $this->rayContext = $environment->getContext(RayContext::class);
         /* @phpstan-ignore-next-line */
         $this->materialContext = $environment->getContext(MaterialContext::class);
+        /* @phpstan-ignore-next-line */
+        $this->intersectionContext = $environment->getContext(IntersectionContext::class);
     }
 
-    /** @Given /^(s) is a sphere\(\)$/ */
+    /** @Given /^(s|shape) is a sphere\(\)$/ */
     public function sIsASphere(): void
     {
         $this->sphere = new Sphere();
@@ -48,25 +51,13 @@ final class SphereContext implements Context
     /** @When /^(xs) is a intersect\((s), (r)\)$/ */
     public function intersectionIsAIntersectOfSphereAndRay(): void
     {
-        $this->intersections = $this->sphere->intersect($this->rayContext->rayA);
-    }
-
-    /** @Then /^(xs)\.count = (\d+)$/ */
-    public function intersectionCount(string $expression, int $count): void
-    {
-        Assert::assertCount($count, $this->intersections);
-    }
-
-    /** @Given /^(xs)\[(\d+)\] = ([-+]?\d*\.?\d+)$/ */
-    public function intersectionAtIndexIs(string $expression, int $index, float $value): void
-    {
-        Assert::assertSame($value, $this->intersections->get($index)->getT());
+        $this->intersectionContext->intersections = new Intersections($this->sphere->intersect($this->rayContext->rayA));
     }
 
     /** @Given /^(xs)\[(\d+)\]\.object = (s)$/ */
     public function intersectionObjectAtIndexIsSphere(string $expression, int $index): void
     {
-        Assert::assertSame($this->sphere, $this->intersections->get($index)->getObject());
+        Assert::assertSame($this->sphere, $this->intersectionContext->intersections->get($index)->getObject());
     }
 
     /** @Then /^(s)\.transform = identity_matrix$/ */
@@ -105,12 +96,6 @@ final class SphereContext implements Context
     public function setTransformSTranslation(float $x, float $y, float $z): void
     {
         $this->sphere->setTransform(MatrixFactory::createTranslation($x, $y, $z));
-    }
-
-    /** @Given /^(xs)\[(\d+)\]\.t = ([-+]?\d*\.?\d+)$/ */
-    public function intersectionObjectAtIndexIsT(string $expression, int $index, float $value): void
-    {
-        Assert::assertSame($value, $this->intersections->get($index)->getT());
     }
 
     /** @When /^(n) is a normal_at\((s), point\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)\)$/ */

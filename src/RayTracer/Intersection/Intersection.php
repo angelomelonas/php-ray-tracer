@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Intersection;
 
-use PhpRayTracer\RayTracer\Object\Sphere;
+use PhpRayTracer\RayTracer\Ray\Ray;
+use PhpRayTracer\RayTracer\Shape\Shape;
 
 final readonly class Intersection
 {
@@ -18,9 +19,17 @@ final readonly class Intersection
 
     public function getObject(): Shape
     {
-        return $this->sphere;
         return $this->shape;
     }
 
+    public function prepareComputations(Ray $ray): Computation
+    {
+        return new Computation(
+            $this->t,
+            $this->shape,
+            $ray->position($this->t),
+            $ray->direction->negate(),
+            $this->shape->normalAt($ray->position($this->t))
+        );
     }
 }

@@ -53,6 +53,11 @@ final class Canvas
         );
     }
 
+    public function getPixelAt(int $x, int $y): Color
+    {
+        return $this->pixels[$y][$x];
+    }
+
     public function canvasToPPM(): string
     {
         $header = $this->getPPMHeader();

@@ -40,42 +40,42 @@ Feature: Intersections
     When i is a hit(xs)
     Then i = i4
 
-#  Scenario: Precomputing the state of an intersection
-#    Given r is a ray(point(0, 0, -5), vector(0, 0, 1))
-#    And shape is a sphere()
-#    And i is a intersection(4, shape)
-#    When comps is a prepare_computations(i, r)
-#    Then comps.t = i.t
-#    And comps.object = i.object
-#    And comps.point = point(0, 0, -1)
-#    And comps.eyev = vector(0, 0, -1)
-#    And comps.normalv = vector(0, 0, -1)
-#
-#  Scenario: Precomputing the reflection vector
+  Scenario: Precomputing the state of an intersection
+    Given r is a ray(point(0, 0, -5), vector(0, 0, 1))
+    And shape is a sphere()
+    And i is a intersection(4, shape)
+    When comps is a prepare_computations(i, r)
+    Then comps.t = i.t
+    And comps.object = i.object
+    And comps.point = point(0, 0, -1)
+    And comps.eyev = vector(0, 0, -1)
+    And comps.normalv = vector(0, 0, -1)
+
+  Scenario: The hit, when an intersection occurs on the outside
+    Given r is a ray(point(0, 0, -5), vector(0, 0, 1))
+    And shape is a sphere()
+    And i is a intersection(4, shape)
+    When comps is a prepare_computations(i, r)
+    Then comps.inside = false
+
+  Scenario: The hit, when an intersection occurs on the inside
+    Given r is a ray(point(0, 0, 0), vector(0, 0, 1))
+    And shape is a sphere()
+    And i is a intersection(1, shape)
+    When comps is a prepare_computations(i, r)
+    Then comps.point = point(0, 0, 1)
+    And comps.eyev = vector(0, 0, -1)
+    And comps.inside = true
+      # normal would have been (0, 0, 1), but is inverted!
+    And comps.normalv = vector(0, 0, -1)
+
+  #  Scenario: Precomputing the reflection vector
 #    Given shape is a plane()
 #    And r is a ray(point(0, 1, -1), vector(0, -√2/2, √2/2))
 #    And i is a intersection(√2, shape)
 #    When comps is a prepare_computations(i, r)
 #    Then comps.reflectv = vector(0, √2/2, √2/2)
-#
-#  Scenario: The hit, when an intersection occurs on the outside
-#    Given r is a ray(point(0, 0, -5), vector(0, 0, 1))
-#    And shape is a sphere()
-#    And i is a intersection(4, shape)
-#    When comps is a prepare_computations(i, r)
-#    Then comps.inside = false
-#
-#  Scenario: The hit, when an intersection occurs on the inside
-#    Given r is a ray(point(0, 0, 0), vector(0, 0, 1))
-#    And shape is a sphere()
-#    And i is a intersection(1, shape)
-#    When comps is a prepare_computations(i, r)
-#    Then comps.point = point(0, 0, 1)
-#    And comps.eyev = vector(0, 0, -1)
-#    And comps.inside = true
-#      # normal would have been (0, 0, 1), but is inverted!
-#    And comps.normalv = vector(0, 0, -1)
-#
+
 #  Scenario: The hit should offset the point
 #    Given r is a ray(point(0, 0, -5), vector(0, 0, 1))
 #    And shape is a sphere() with:

@@ -6,11 +6,15 @@ namespace PhpRayTracer\Tests\Behat;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use LogicException;
+use PhpRayTracer\RayTracer\Intersection\Computation;
 use PhpRayTracer\RayTracer\Intersection\Intersection;
 use PhpRayTracer\RayTracer\Intersection\IntersectionFactory;
 use PhpRayTracer\RayTracer\Intersection\Intersections;
-use PhpRayTracer\RayTracer\Object\Sphere;
+use PhpRayTracer\RayTracer\Shape\Shape;
+use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PHPUnit\Framework\Assert;
+use function filter_var;
+use const FILTER_VALIDATE_BOOLEAN;
 
 final class IntersectionContext implements Context
 {
@@ -18,12 +22,12 @@ final class IntersectionContext implements Context
     private Intersection $intersectionB;
     private Intersection $intersectionC;
     private Intersection $intersectionD;
-
-    private Intersections $intersections;
-
+    public Intersections $intersections;
     private ?Intersection $hit = null;
+    public Computation $computation;
 
     private SphereContext $sphereContext;
+    private RayContext $rayContext;
 
     /** @BeforeScenario */
     public function gatherContexts(BeforeScenarioScope $scope): void
@@ -32,9 +36,11 @@ final class IntersectionContext implements Context
 
         /* @phpstan-ignore-next-line */
         $this->sphereContext = $environment->getContext(SphereContext::class);
+        /* @phpstan-ignore-next-line */
+        $this->rayContext = $environment->getContext(RayContext::class);
     }
 
-    /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (s)\)$/ */
+    /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (s|shape)\)$/ */
     public function iIsAIntersectionOfSphereS(string $expression, float $t): void
     {
         $this->createIntersection($t, $this->sphereContext->sphere);
@@ -94,6 +100,24 @@ final class IntersectionContext implements Context
         Assert::assertNull($this->hit);
     }
 
+    /** @Then /^(xs)\.count = (\d+)$/ */
+    public function intersectionCount(string $expression, int $count): void
+    {
+        Assert::assertCount($count, $this->intersections);
+    }
+
+    /** @Given /^(xs)\[(\d+)\] = ([-+]?\d*\.?\d+)$/ */
+    public function intersectionAtIndexIs(string $expression, int $index, float $value): void
+    {
+        Assert::assertSame($value, $this->intersections->get($index)->getT());
+    }
+
+    /** @Given /^(xs)\[(\d+)\]\.t = ([-+]?\d*\.?\d+)$/ */
+    public function intersectionObjectAtIndexIsT(string $expression, int $index, float $value): void
+    {
+        Assert::assertSame($value, $this->intersections->get($index)->getT());
+    }
+
     /** @Given /^xs is a intersections\((i1), (i2), (i3), (i4)\)$/ */
     public function xsIsAIntersectionsI1I2I3I4(): void
     {
@@ -105,32 +129,74 @@ final class IntersectionContext implements Context
         ]);
     }
 
-    private function createIntersection(float $t, Sphere $sphere): Intersection
+    public function createIntersection(float $t, Shape $shape): Intersection
     {
         if (! isset($this->intersectionA)) {
-            $this->intersectionA = IntersectionFactory::create($t, $sphere);
+            $this->intersectionA = IntersectionFactory::create($t, $shape);
 
             return $this->intersectionA;
         }
 
         if (! isset($this->intersectionB)) {
-            $this->intersectionB = IntersectionFactory::create($t, $sphere);
+            $this->intersectionB = IntersectionFactory::create($t, $shape);
 
             return $this->intersectionB;
         }
 
         if (! isset($this->intersectionC)) {
-            $this->intersectionC = IntersectionFactory::create($t, $sphere);
+            $this->intersectionC = IntersectionFactory::create($t, $shape);
 
             return $this->intersectionC;
         }
 
         if (! isset($this->intersectionD)) {
-            $this->intersectionD = IntersectionFactory::create($t, $sphere);
+            $this->intersectionD = IntersectionFactory::create($t, $shape);
 
             return $this->intersectionD;
         }
 
         throw new LogicException('No intersection is set.');
+    }
+
+    /** @When /^(comps) is a prepare_computations\((i), (r)\)$/ */
+    public function compsIsAPrepareComputations(): void
+    {
+        $this->computation = $this->intersectionA->prepareComputations($this->rayContext->rayA);
+    }
+
+    /** @Then /^(comps)\.t = (i)\.t$/ */
+    public function compsTIsT(): void
+    {
+        Assert::assertEquals($this->intersectionA->getT(), $this->computation->getT());
+    }
+
+    /** @Given /^(comps)\.object = i\.object$/ */
+    public function compsObjectIObject(): void
+    {
+        Assert::assertSame($this->intersectionA->getObject(), $this->computation->getObject());
+    }
+
+    /** @Given /^(comps)\.point = point\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
+    public function compsPointPoint1(string $expression, float $x, float $y, float $z): void
+    {
+        Assert::assertTrue(TupleFactory::createPoint($x, $y, $z)->isEqualTo($this->computation->getPoint()));
+    }
+
+    /** @Given /^(comps)\.eyev = vector\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
+    public function compsEyevVector1(string $expression, float $x, float $y, float $z): void
+    {
+        Assert::assertTrue(TupleFactory::createVector($x, $y, $z)->isEqualTo($this->computation->getEyeVector()));
+    }
+
+    /** @Given /^(comps)\.normalv = vector\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
+    public function compsNormalvVector1(string $expression, float $x, float $y, float $z): void
+    {
+        Assert::assertTrue(TupleFactory::createVector($x, $y, $z)->isEqualTo($this->computation->getNormalVector()));
+    }
+
+    /** @Then /^(comps)\.inside = (true|false)$/ */
+    public function compsInsideTrueOrFalse(string $expression, string $bool): void
+    {
+        Assert::assertEquals(filter_var($bool, FILTER_VALIDATE_BOOLEAN), $this->computation->isInside());
     }
 }

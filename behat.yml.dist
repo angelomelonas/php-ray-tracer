@@ -11,6 +11,8 @@ default:
         - PhpRayTracer\Tests\Behat\IntersectionContext
         - PhpRayTracer\Tests\Behat\LightContext
         - PhpRayTracer\Tests\Behat\MaterialContext
+        - PhpRayTracer\Tests\Behat\WorldContext
+        - PhpRayTracer\Tests\Behat\CameraContext
 
   extensions:
     FriendsOfBehat\SymfonyExtension:
