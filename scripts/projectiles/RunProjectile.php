@@ -3,7 +3,6 @@
 use PhpRayTracer\RayTracer\Canvas\Canvas;
 use PhpRayTracer\RayTracer\Projectiles\Environment;
 use PhpRayTracer\RayTracer\Projectiles\Projectile;
-use PhpRayTracer\RayTracer\Projectiles\World;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 
@@ -19,8 +18,6 @@ $environment = new Environment(
     TupleFactory::createVector(-0.01, 0, 0)
 );
 
-$world = new World();
-
 $width = 900;
 $height = 550;
 $canvas = new Canvas($width, $height);
@@ -32,7 +29,7 @@ while (true) {
         intval($height - $projectile->position->y),
         ColorFactory::create(1, 1, 1)
     );
-    $projectile = $world->tick($projectile, $environment);
+    $projectile = tick($projectile, $environment);
 
     echo sprintf("Projectile position: %s" . PHP_EOL, $projectile->position->__toString());
 
@@ -45,5 +42,10 @@ while (true) {
 $ppm = $canvas->canvasToPPM();
 file_put_contents('projectile.ppm', $ppm);
 
+function tick(Projectile $projectile, Environment $environment): Projectile
+{
+    $newPosition = $projectile->position->add($projectile->velocity);
+    $newVelocity = $projectile->velocity->add($environment->gravity->add($environment->wind));
 
-
+    return new Projectile($newPosition, $newVelocity);
+}

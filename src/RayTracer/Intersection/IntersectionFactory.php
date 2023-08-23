@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace PhpRayTracer\RayTracer\Intersection;
 
-use PhpRayTracer\RayTracer\Sphere\Sphere;
+use PhpRayTracer\RayTracer\Shape\Shape;
 
 final class IntersectionFactory
 {
-    public static function create(float $t, Sphere $sphere): Intersection
+    public static function create(float $t, Shape $shape): Intersection
     {
-        return new Intersection($t, $sphere);
+        return new Intersection($t, $shape);
     }
 }

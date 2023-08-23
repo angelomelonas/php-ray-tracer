@@ -6,21 +6,18 @@ namespace PhpRayTracer\Tests\Behat;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Tester\Exception\PendingException;
-use PhpRayTracer\RayTracer\Light\Light;
-use PhpRayTracer\RayTracer\Light\LightFactory;
 use PhpRayTracer\RayTracer\Material\Material;
 use PhpRayTracer\RayTracer\Tuple\Color;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
-use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PHPUnit\Framework\Assert;
 
 final class MaterialContext implements Context
 {
     public Material $material;
-    public Light $light;
     private Color $colorResult;
 
     private TupleContext $tupleContext;
+    private LightContext $lightContext;
 
     /** @BeforeScenario */
     public function gatherContexts(BeforeScenarioScope $scope): void
@@ -29,6 +26,8 @@ final class MaterialContext implements Context
 
         /* @phpstan-ignore-next-line */
         $this->tupleContext = $environment->getContext(TupleContext::class);
+        /* @phpstan-ignore-next-line */
+        $this->lightContext = $environment->getContext(LightContext::class);
     }
 
     /** @Given /^(m) is a material\(\)$/ */
@@ -67,17 +66,11 @@ final class MaterialContext implements Context
         Assert::assertEquals($value, $this->material->shininess);
     }
 
-    /** @Given /^(light) is a point_light\(point\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\), color\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)\)$/ */
-    public function lightIsAPointLightAtPointWithColor(string $expression, float $x, float $y, float $z, float $red, float $green, float $blue): void
-    {
-        $this->light = LightFactory::create(TupleFactory::createPoint($x, $y, $z), ColorFactory::create($red, $green, $blue));
-    }
-
     /** @When /^(result) is a lighting\((m), (light), (position), (eyev), (normalv)\)$/ */
     public function resultIsALightingMLightPositionEyevNormalv(): void
     {
         $this->colorResult = $this->material->lighting(
-            $this->light,
+            $this->lightContext->light,
             $this->tupleContext->tupleA,
             $this->tupleContext->tupleB,
             $this->tupleContext->tupleC

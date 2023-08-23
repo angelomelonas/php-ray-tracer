@@ -33,7 +33,7 @@ final class MatrixFactory
         return new Matrix(self::MATRIX_4X4);
     }
 
-    public static function createIdentity(int $size): Matrix
+    public static function createIdentity(int $size = self::MATRIX_4X4): Matrix
     {
         $matrix = self::create($size);
         for ($i = 0; $i < $size; $i++) {
@@ -111,5 +111,26 @@ final class MatrixFactory
         $matrix->set(2, 1, $zY);
 
         return $matrix;
+    }
+
+    public static function createViewTransformation(Tuple $from, Tuple $to, Tuple $up): Matrix
+    {
+        $forward = $to->subtract($from)->normalize();
+        $upn = $up->normalize();
+        $left = $forward->cross($upn);
+        $trueUp = $left->cross($forward);
+
+        $orientation = self::createIdentity(4);
+        $orientation->set(0, 0, $left->x);
+        $orientation->set(0, 1, $left->y);
+        $orientation->set(0, 2, $left->z);
+        $orientation->set(1, 0, $trueUp->x);
+        $orientation->set(1, 1, $trueUp->y);
+        $orientation->set(1, 2, $trueUp->z);
+        $orientation->set(2, 0, -$forward->x);
+        $orientation->set(2, 1, -$forward->y);
+        $orientation->set(2, 2, -$forward->z);
+
+        return $orientation->multiplyMatrix(self::createTranslation(-$from->x, -$from->y, -$from->z));
     }
 }

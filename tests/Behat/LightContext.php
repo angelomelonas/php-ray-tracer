@@ -7,11 +7,13 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use PhpRayTracer\RayTracer\Light\Light;
 use PhpRayTracer\RayTracer\Light\LightFactory;
+use PhpRayTracer\RayTracer\Tuple\ColorFactory;
+use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PHPUnit\Framework\Assert;
 
 final class LightContext implements Context
 {
-    private Light $light;
+    public Light $light;
 
     private ColorContext $colorContext;
     private TupleContext $tupleContext;
@@ -43,5 +45,11 @@ final class LightContext implements Context
     public function lightIntensityIsIntensity(): void
     {
         Assert::assertTrue($this->light->intensity->isEqualTo($this->colorContext->colorA));
+    }
+
+    /** @Given /^(light) is a point_light\(point\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\), color\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)\)$/ */
+    public function lightIsAPointLightAtPointWithColor(string $expression, float $x, float $y, float $z, float $red, float $green, float $blue): void
+    {
+        $this->light = LightFactory::create(TupleFactory::createPoint($x, $y, $z), ColorFactory::create($red, $green, $blue));
     }
 }

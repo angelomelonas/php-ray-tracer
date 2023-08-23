@@ -3,9 +3,9 @@
 use PhpRayTracer\RayTracer\Canvas\Canvas;
 use PhpRayTracer\RayTracer\Projectiles\Environment;
 use PhpRayTracer\RayTracer\Projectiles\Projectile;
-use PhpRayTracer\RayTracer\Projectiles\World;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
+use PhpRayTracer\RayTracer\World\World;
 
 require '../../vendor/autoload.php';
 
@@ -67,10 +67,10 @@ while (true) {
         );
     }
 
-    $projectile1 = $world->tick($projectile1, $environment);
-    $projectile2 = $world->tick($projectile2, $environment);
-    $projectile3 = $world->tick($projectile3, $environment);
-    $projectile4 = $world->tick($projectile4, $environment);
+    $projectile1 = tick($projectile1, $environment);
+    $projectile2 = tick($projectile2, $environment);
+    $projectile3 = tick($projectile3, $environment);
+    $projectile4 = tick($projectile4, $environment);
 
     if ($projectile1->position->y < 0 && $projectile2->position->y < 0 && $projectile3->position->y < 0 && $projectile4->position->y < 0) {
         break;
@@ -79,3 +79,11 @@ while (true) {
 
 $ppm = $canvas->canvasToPPM();
 file_put_contents('projectiles.ppm', $ppm);
+
+function tick(Projectile $projectile, Environment $environment): Projectile
+{
+    $newPosition = $projectile->position->add($projectile->velocity);
+    $newVelocity = $projectile->velocity->add($environment->gravity->add($environment->wind));
+
+    return new Projectile($newPosition, $newVelocity);
+}
