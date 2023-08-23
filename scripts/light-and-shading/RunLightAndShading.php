@@ -3,7 +3,7 @@
 use PhpRayTracer\RayTracer\Canvas\Canvas;
 use PhpRayTracer\RayTracer\Light\LightFactory;
 use PhpRayTracer\RayTracer\Material\MaterialFactory;
-use PhpRayTracer\RayTracer\Object\Sphere;
+use PhpRayTracer\RayTracer\Shape\Sphere;
 use PhpRayTracer\RayTracer\Ray\RayFactory;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;

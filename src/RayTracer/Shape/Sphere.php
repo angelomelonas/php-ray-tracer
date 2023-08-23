@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace PhpRayTracer\RayTracer\Object;
+namespace PhpRayTracer\RayTracer\Shape;
 
+use PhpRayTracer\RayTracer\Intersection\Intersection;
 use PhpRayTracer\RayTracer\Intersection\IntersectionFactory;
-use PhpRayTracer\RayTracer\Intersection\Intersections;
 use PhpRayTracer\RayTracer\Material\Material;
 use PhpRayTracer\RayTracer\Material\MaterialFactory;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
@@ -17,7 +17,7 @@ use function pow;
 use function sqrt;
 use const SORT_NUMERIC;
 
-final class Sphere
+final class Sphere implements Shape
 {
     public Tuple $origin;
     public Matrix $transformationMatrix;
@@ -50,7 +50,8 @@ final class Sphere
         return $this->material = $material;
     }
 
-    public function intersect(Ray $ray): Intersections
+    /** @return Intersection[] */
+    public function intersect(Ray $ray): array
     {
         $ray = $ray->transform($this->getTransform()->inverse());
         $sphereToRay = $ray->origin->subtract($this->origin);
@@ -62,7 +63,7 @@ final class Sphere
         $discriminant = pow($b, 2) - (4 * $a * $c);
 
         if ($discriminant < 0) {
-            return new Intersections([]);
+            return [];
         }
 
         $t1 = (-$b - sqrt($discriminant)) / (2 * $a);
@@ -71,10 +72,10 @@ final class Sphere
         $intersections = [$t1, $t2];
         asort($intersections, SORT_NUMERIC);
 
-        return new Intersections([
+        return [
             IntersectionFactory::create($intersections[0], $this),
             IntersectionFactory::create($intersections[1], $this),
-        ]);
+        ];
     }
 
     public function normalAt(Tuple $point): Tuple

@@ -33,7 +33,7 @@ final class MatrixFactory
         return new Matrix(self::MATRIX_4X4);
     }
 
-    public static function createIdentity(int $size): Matrix
+    public static function createIdentity(int $size = self::MATRIX_4X4): Matrix
     {
         $matrix = self::create($size);
         for ($i = 0; $i < $size; $i++) {

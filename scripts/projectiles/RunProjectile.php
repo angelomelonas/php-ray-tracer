@@ -3,7 +3,6 @@
 use PhpRayTracer\RayTracer\Canvas\Canvas;
 use PhpRayTracer\RayTracer\Projectiles\Environment;
 use PhpRayTracer\RayTracer\Projectiles\Projectile;
-use PhpRayTracer\RayTracer\Projectiles\World;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 

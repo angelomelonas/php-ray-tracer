@@ -5,7 +5,6 @@ namespace PhpRayTracer\Tests\Behat;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use LogicException;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
@@ -33,6 +32,8 @@ final class MatrixContext implements Context
 
     private Matrix $rotationHalfQuarter;
     private Matrix $rotationFullQuarter;
+
+    private Matrix $viewTransformation;
 
     private TupleContext $tupleContext;
 
@@ -380,7 +381,7 @@ final class MatrixContext implements Context
         $this->transform = MatrixFactory::createShearing($xY, $xZ, $yX, $yZ, $zX, $zY);
     }
 
-    /** @Given /^A is a rotation_x\(π \/ 2\)$/ */
+    /** @Given /^(A) is a rotation_x\((π \/ 2)\)$/ */
     public function aIsARotationX(): void
     {
         $this->rotation = MatrixFactory::createRotationX(M_PI_2);
@@ -442,6 +443,41 @@ final class MatrixContext implements Context
         Assert::assertTrue($expected->isEqualTo($actual));
     }
 
+    /** @When /^(t) is a view_transform\((from), (to), (up)\)$/ */
+    public function tIsAViewTransformFromToUp(): void
+    {
+        $this->viewTransformation = MatrixFactory::createViewTransformation(
+            $this->tupleContext->tupleA,
+            $this->tupleContext->tupleB,
+            $this->tupleContext->tupleC
+        );
+    }
+
+    /** @Then /^(t) = identity_matrix$/ */
+    public function tIsTheIdentityMatrix(): void
+    {
+        Assert::assertTrue(MatrixFactory::createIdentity(MatrixFactory::MATRIX_4X4)->isEqualTo($this->viewTransformation));
+    }
+
+    /** @Then /^(t) = scaling\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
+    public function tIsAScaling(string $expression, float $x, float $y, float $z): void
+    {
+        Assert::assertTrue(MatrixFactory::createScaling($x, $y, $z)->isEqualTo($this->viewTransformation));
+    }
+
+    /** @Then /^(t) = translation\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
+    public function tIsATranslation(string $expression, float $x, float $y, float $z): void
+    {
+        Assert::assertTrue(MatrixFactory::createTranslation($x, $y, $z)->isEqualTo($this->viewTransformation));
+    }
+
+    /** @Then /^(t) is the following 4x4 matrix:$/ */
+    public function tIsTheFollowingMatrix(string $expression, TableNode $table): void
+    {
+        $expected = $this->createMatrixFromTable($table);
+        Assert::assertTrue($expected->isEqualTo($this->viewTransformation));
+    }
+
     private function createMatrix(int $size): Matrix
     {
         if (! isset($this->matrixA)) {
@@ -470,35 +506,5 @@ final class MatrixContext implements Context
         }
 
         return $matrix;
-    }
-
-    /** @When /^t is a view_transform\(from, to, up\)$/ */
-    public function tIsAView_transformFromToUp(): void
-    {
-        throw new PendingException();
-    }
-
-    /** @Then /^t = identity_matrix$/ */
-    public function tIdentityMatrix(): void
-    {
-        throw new PendingException();
-    }
-
-    /** @Then /^t = scaling\(\-1, (\d+), \-1\)$/ */
-    public function tScaling1(): void
-    {
-        throw new PendingException();
-    }
-
-    /** @Then /^t = translation\(0, (\d+), \-8\)$/ */
-    public function tTranslation8(): void
-    {
-        throw new PendingException();
-    }
-
-    /** @Then /^t is the following 4x4 matrix:$/ */
-    public function tIsTheFollowingMatrix(): void
-    {
-        throw new PendingException();
     }
 }

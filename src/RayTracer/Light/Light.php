@@ -11,4 +11,9 @@ final class Light
     public function __construct(public Tuple $position, public Color $intensity)
     {
     }
+
+    public function isEqualTo(Light $light): bool
+    {
+        return $this->position->isEqualTo($light->position) && $this->intensity->isEqualTo($light->intensity);
+    }
 }
