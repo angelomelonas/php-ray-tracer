@@ -22,7 +22,7 @@ $world->addShape(createLargeSphere());
 $world->addShape(createSmallRightSphere());
 $world->addShape(createSmallLeftSphere());
 
-$camera = createCamera(800, 400, M_PI / 3);
+$camera = createCamera(100, 50, M_PI / 3);
 
 $startTime = microtime(true);
 

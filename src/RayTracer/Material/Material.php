@@ -20,11 +20,16 @@ final class Material
     ) {
     }
 
-    public function lighting(Light $light, Tuple $position, Tuple $eyeVector, Tuple $normalVector): Color
-    {
-        $effectiveColor = $this->color->hadamardProduct($light->intensity);
+    public function lighting(
+        Light $light,
+        Tuple $position,
+        Tuple $eyeVector,
+        Tuple $normalVector,
+        bool $inShadow,
+    ): Color {
+        $effectiveColor = $this->color->hadamardProduct($light->getIntensity());
 
-        $lightVector = $light->position->subtract($position)->normalize();
+        $lightVector = $light->getPosition()->subtract($position)->normalize();
 
         $ambient = $effectiveColor->multiply($this->ambient);
 
@@ -43,8 +48,12 @@ final class Material
                 $specular = ColorFactory::createBlack();
             } else {
                 $factor = pow($reflectDotEye, $this->shininess);
-                $specular = $light->intensity->multiply($this->specular)->multiply($factor);
+                $specular = $light->getIntensity()->multiply($this->specular)->multiply($factor);
             }
+        }
+
+        if ($inShadow) {
+            return $ambient;
         }
 
         return $ambient->add($diffuse)->add($specular);

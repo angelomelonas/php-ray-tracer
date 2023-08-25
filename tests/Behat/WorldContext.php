@@ -5,7 +5,6 @@ namespace PhpRayTracer\Tests\Behat;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Gherkin\Node\TableNode;
 use PhpRayTracer\RayTracer\Light\Light;
 use PhpRayTracer\RayTracer\Light\LightFactory;
 use PhpRayTracer\RayTracer\Material\MaterialFactory;
@@ -18,24 +17,21 @@ use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PhpRayTracer\RayTracer\World\World;
 use PhpRayTracer\RayTracer\World\WorldFactory;
 use PHPUnit\Framework\Assert;
-use function explode;
-use function floatval;
-use function trim;
 
 final class WorldContext implements Context
 {
     public World $world;
     public Light $light;
 
-    private Shape $shapeA;
     private Shape $shapeB;
-
-    private IntersectionContext $intersectionContext;
 
     private Color $shadeHit;
 
     private LightContext $lightContext;
     private RayContext $rayContext;
+    private IntersectionContext $intersectionContext;
+    private TupleContext $tupleContext;
+    private SphereContext $sphereContext;
 
     /** @BeforeScenario */
     public function gatherContexts(BeforeScenarioScope $scope): void
@@ -48,6 +44,10 @@ final class WorldContext implements Context
         $this->rayContext = $environment->getContext(RayContext::class);
         /* @phpstan-ignore-next-line */
         $this->intersectionContext = $environment->getContext(IntersectionContext::class);
+        /* @phpstan-ignore-next-line */
+        $this->tupleContext = $environment->getContext(TupleContext::class);
+        /* @phpstan-ignore-next-line */
+        $this->sphereContext = $environment->getContext(SphereContext::class);
     }
 
     /** @Given /^(w) is a world\(\)$/ */
@@ -68,38 +68,6 @@ final class WorldContext implements Context
         Assert::assertNull($this->world->getLight());
     }
 
-    /** @Given /^(s1) is a sphere\(\) with:$/ */
-    public function s1IsASphereWith(string $expression, TableNode $table): void
-    {
-        $values = explode(', ', trim($table->getRow(0)[1], '()'));
-        [$red, $green, $blue] = $values;
-
-        $this->shapeA = ShapeFactory::createSphere();
-        $material = MaterialFactory::create();
-        $material->color = ColorFactory::create(floatval($red), floatval($green), floatval($blue));
-        $material->diffuse = floatval($table->getRow(1)[1]);
-        $material->specular = floatval($table->getRow(2)[1]);
-        $this->shapeA->setMaterial($material);
-
-//        $expected = ColorFactory::create(floatval($red), floatval($green), floatval($blue));
-//        Assert::assertTrue($expected->isEqualTo($this->shapeA->getMaterial()->color));
-//        Assert::assertEquals(floatval($table->getRow(1)[1]), $this->shapeA->getMaterial()->diffuse);
-//        Assert::assertEquals(floatval($table->getRow(2)[1]), $this->shapeA->getMaterial()->specular);
-    }
-
-    /** @Given /^(s2) is a sphere\(\) with:$/ */
-    public function sIsASphereWith(string $expression, TableNode $table): void
-    {
-        $values = explode(', ', trim($table->getRow(0)[1], '()'));
-        [$x, $y, $z] = $values;
-
-        $this->shapeB = ShapeFactory::createSphere();
-        $this->shapeB->setTransform(MatrixFactory::createScaling(floatval($x), floatval($y), floatval($z)));
-
-//        $expected = MatrixFactory::createScaling(floatval($x), floatval($y), floatval($z));
-//        Assert::assertTrue($expected->isEqualTo($this->shapeB->getTransform()));
-    }
-
     /** @When /^(w) is a default_world\(\)$/ */
     public function wIsADefaultWorld(): void
     {
@@ -111,16 +79,16 @@ final class WorldContext implements Context
 
         $this->world->setLight($this->lightContext->light);
 
-        if (! isset($this->shapeA)) {
-            $this->shapeA = ShapeFactory::createSphere();
+        if (! isset($this->sphereContext->sphereA)) {
+            $this->sphereContext->sphereA = ShapeFactory::createSphere();
             $material = MaterialFactory::create();
             $material->color = ColorFactory::create(0.8, 1.0, 0.6);
             $material->diffuse = 0.7;
             $material->specular = 0.2;
-            $this->shapeA->setMaterial($material);
+            $this->sphereContext->sphereA->setMaterial($material);
         }
 
-        $this->world->addShape($this->shapeA);
+        $this->world->addShape($this->sphereContext->sphereA);
 
         if (! isset($this->shapeB)) {
             $this->shapeB = ShapeFactory::createSphere();
@@ -140,7 +108,7 @@ final class WorldContext implements Context
     /** @Given /^(w) contains (s1)$/ */
     public function wContainsSphereS1(): void
     {
-        Assert::assertSame($this->shapeA, $this->world->getShape(0));
+        Assert::assertSame($this->sphereContext->sphereA, $this->world->getShape(0));
     }
 
     /** @Given /^(w) contains (s2)$/ */
@@ -158,13 +126,13 @@ final class WorldContext implements Context
     /** @Given /^(shape|outer) is the first object in (w)$/ */
     public function shapeIsATheFirstObjectInW(): void
     {
-        Assert::assertSame($this->shapeA, $this->world->getShape(0));
+        Assert::assertSame($this->sphereContext->sphereA, $this->world->getShape(0));
     }
 
     /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (shapeA)\)$/ */
     public function iIsAIntersectionOfWorldShapeA(string $expression, float $t): void
     {
-        $this->intersectionContext->createIntersection($t, $this->shapeA);
+        $this->intersectionContext->createIntersection($t, $this->sphereContext->sphereA);
     }
 
     /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (shapeB)\)$/ */
@@ -206,7 +174,7 @@ final class WorldContext implements Context
     /** @Given /^(outer)\.(material)\.(ambient) is a ([-+]?\d*\.?\d+)$/ */
     public function shapeAMaterialAmbientIsA(string $expression1, string $expression2, string $expression3, float $value): void
     {
-        $this->shapeA->getMaterial()->ambient = $value;
+        $this->sphereContext->sphereA->getMaterial()->ambient = $value;
     }
 
     /** @Given /^(inner)\.(material)\.(ambient) is a ([-+]?\d*\.?\d+)$/ */
@@ -219,5 +187,23 @@ final class WorldContext implements Context
     public function cShapeMaterialColor(): void
     {
         Assert::assertTrue($this->shapeB->getMaterial()->color->isEqualTo($this->shadeHit));
+    }
+
+    /** @Then /^is_shadowed\((w), (p)\) is (false|true)$/ */
+    public function isShadowedIsFalse(string $expression1, string $expression2, string $value): void
+    {
+        Assert::assertTrue($this->world->isShadowed($this->tupleContext->tupleA) === ($value === 'true'));
+    }
+
+    /** @Given /^(s1) is added to (w)$/ */
+    public function sphereS1IsAddedToW(): void
+    {
+        $this->world->addShape($this->sphereContext->sphereA);
+    }
+
+    /** @Given /^(s2) is added to (w)$/ */
+    public function sphereS2IsAddedToW(): void
+    {
+        $this->world->addShape($this->sphereContext->sphereB);
     }
 }

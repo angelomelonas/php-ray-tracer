@@ -69,40 +69,40 @@ Feature: World
     When c is a color_at(w, r)
     Then c = inner.material.color
 
-#  Scenario: There is no shadow when nothing is collinear with point and light
-#    Given w is a default_world()
-#    And p is a point(0, 10, 0)
-#    Then is_shadowed(w, p) is false
-#
-#  Scenario: The shadow when an object is between the point and the light
-#    Given w is a default_world()
-#    And p is a point(10, -10, 10)
-#    Then is_shadowed(w, p) is true
-#
-#  Scenario: There is no shadow when an object is behind the light
-#    Given w is a default_world()
-#    And p is a point(-20, 20, -20)
-#    Then is_shadowed(w, p) is false
-#
-#  Scenario: There is no shadow when an object is behind the point
-#    Given w is a default_world()
-#    And p is a point(-2, 2, -2)
-#    Then is_shadowed(w, p) is false
-#
-#  Scenario: shade_hit() is given an intersection in shadow
-#    Given w is a world()
-#    And w.light is a point_light(point(0, 0, -10), color(1, 1, 1))
-#    And s1 is a sphere()
-#    And s1 is added to w
-#    And s2 is a sphere() with:
-#      | transform | translation(0, 0, 10) |
-#    And s2 is added to w
-#    And r is a ray(point(0, 0, 5), vector(0, 0, 1))
-#    And i is a intersection(4, s2)
-#    When comps is a prepare_computations(i, r)
-#    And c is a shade_hit(w, comps)
-#    Then c = color(0.1, 0.1, 0.1)
-#
+  Scenario: There is no shadow when nothing is collinear with point and light
+    Given w is a default_world()
+    And p is a point(0, 10, 0)
+    Then is_shadowed(w, p) is false
+
+  Scenario: The shadow when an object is between the point and the light
+    Given w is a default_world()
+    And p is a point(10, -10, 10)
+    Then is_shadowed(w, p) is true
+
+  Scenario: There is no shadow when an object is behind the light
+    Given w is a default_world()
+    And p is a point(-20, 20, -20)
+    Then is_shadowed(w, p) is false
+
+  Scenario: There is no shadow when an object is behind the point
+    Given w is a default_world()
+    And p is a point(-2, 2, -2)
+    Then is_shadowed(w, p) is false
+
+  Scenario: shade_hit() is given an intersection in shadow
+    Given w is a world()
+    And w.light is a point_light(point(0, 0, -10), color(1, 1, 1))
+    And s1 is a sphere()
+    And s1 is added to w
+    And s2 is a sphere() with:
+      | transform | translation(0, 0, 10) |
+    And s2 is added to w
+    And r is a ray(point(0, 0, 5), vector(0, 0, 1))
+    And i is a intersection(4, s2)
+    When comps is a prepare_computations(i, r)
+    And c is a shade_hit(w, comps)
+    Then c = color(0.1, 0.1, 0.1)
+
 #  Scenario: The reflected color for a nonreflective material
 #    Given w is a default_world()
 #    And r is a ray(point(0, 0, 0), vector(0, 0, 1))

@@ -5,10 +5,12 @@ namespace PhpRayTracer\RayTracer\Intersection;
 
 use PhpRayTracer\RayTracer\Shape\Shape;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
+use PhpRayTracer\RayTracer\Utility\Utility;
 
 final class Computation
 {
     private bool $inside;
+    private Tuple $overPoint;
 
     public function __construct(
         private readonly float $t,
@@ -23,6 +25,8 @@ final class Computation
         } else {
             $this->inside = false;
         }
+
+        $this->overPoint = $this->point->add($this->normalVector->multiply(Utility::PRECISION_TEST));
     }
 
     public function getT(): float
@@ -53,5 +57,10 @@ final class Computation
     public function isInside(): bool
     {
         return $this->inside;
+    }
+
+    public function getOverPoint(): Tuple
+    {
+        return $this->overPoint;
     }
 }

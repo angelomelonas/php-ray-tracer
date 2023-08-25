@@ -47,6 +47,14 @@ Feature: Materials
     When result is a lighting(m, light, position, eyev, normalv)
     Then result = color(0.1, 0.1, 0.1)
 
+  Scenario: Lighting with the surface in shadow
+    Given eyev is a vector(0, 0, -1)
+    And normalv is a vector(0, 0, -1)
+    And light is a point_light(point(0, 0, -10), color(1, 1, 1))
+    And in_shadow is true
+    When result is a lighting(m, light, position, eyev, normalv, in_shadow)
+    Then result = color(0.1, 0.1, 0.1)
+
 #  Scenario: Reflectivity for the default material
 #    Given m is a material()
 #    Then m.reflective = 0.0
@@ -56,16 +64,6 @@ Feature: Materials
 #    Then m.transparency = 0.0
 #    And m.refractive_index = 1.0
 
-
-
-#  Scenario: Lighting with the surface in shadow
-#    Given eyev is a vector(0, 0, -1)
-#    And normalv is a vector(0, 0, -1)
-#    And light is a point_light(point(0, 0, -10), color(1, 1, 1))
-#    And in_shadow is a true
-#    When result is a lighting(m, light, position, eyev, normalv, in_shadow)
-#    Then result = color(0.1, 0.1, 0.1)
-#
 #  Scenario: Lighting with a pattern applied
 #    Given m.pattern is a stripe_pattern(color(1, 1, 1), color(0, 0, 0))
 #    And m.ambient is a 1

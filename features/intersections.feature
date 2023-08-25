@@ -69,6 +69,15 @@ Feature: Intersections
       # normal would have been (0, 0, 1), but is inverted!
     And comps.normalv = vector(0, 0, -1)
 
+  Scenario: The hit should offset the point
+    Given r is a ray(point(0, 0, -5), vector(0, 0, 1))
+    And shape is a sphere() with:
+      | transform | translation(0, 0, 1) |
+    And i is a intersection(5, shape)
+    When comps is a prepare_computations(i, r)
+    Then comps.over_point.z < -EPSILON/2
+    And comps.point.z > comps.over_point.z
+
   #  Scenario: Precomputing the reflection vector
 #    Given shape is a plane()
 #    And r is a ray(point(0, 1, -1), vector(0, -√2/2, √2/2))
@@ -76,15 +85,6 @@ Feature: Intersections
 #    When comps is a prepare_computations(i, r)
 #    Then comps.reflectv = vector(0, √2/2, √2/2)
 
-#  Scenario: The hit should offset the point
-#    Given r is a ray(point(0, 0, -5), vector(0, 0, 1))
-#    And shape is a sphere() with:
-#      | transform | translation(0, 0, 1) |
-#    And i is a intersection(5, shape)
-#    When comps is a prepare_computations(i, r)
-#    Then comps.over_point.z < -EPSILON/2
-#    And comps.point.z > comps.over_point.z
-#
 #  Scenario: The under point is offset below the surface
 #    Given r is a ray(point(0, 0, -5), vector(0, 0, 1))
 #    And shape is a glass_sphere() with:

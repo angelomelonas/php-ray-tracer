@@ -7,9 +7,11 @@ use PhpRayTracer\RayTracer\Intersection\Computation;
 use PhpRayTracer\RayTracer\Intersection\Intersections;
 use PhpRayTracer\RayTracer\Light\Light;
 use PhpRayTracer\RayTracer\Ray\Ray;
+use PhpRayTracer\RayTracer\Ray\RayFactory;
 use PhpRayTracer\RayTracer\Shape\Shape;
 use PhpRayTracer\RayTracer\Tuple\Color;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
+use PhpRayTracer\RayTracer\Tuple\Tuple;
 use function assert;
 
 final class World
@@ -66,11 +68,14 @@ final class World
     {
         assert($this->light !== null);
 
+        $isShadowed = $this->isShadowed($computation->getOverPoint());
+
         return $computation->getObject()->getMaterial()->lighting(
             $this->light,
             $computation->getPoint(),
             $computation->getEyeVector(),
             $computation->getNormalVector(),
+            $isShadowed
         );
     }
 
@@ -86,5 +91,21 @@ final class World
         $computation = $hit->prepareComputations($ray);
 
         return $this->shadeHit($computation);
+    }
+
+    public function isShadowed(Tuple $point): bool
+    {
+        assert($this->light !== null);
+
+        $y = $this->light->getPosition()->subtract($point);
+        $distance = $y->magnitude();
+        $direction = $y->normalize();
+
+        $ray = RayFactory::create($point, $direction);
+        $intersections = $this->intersectWorld($ray);
+
+        $hit = $intersections->hit();
+
+        return $hit !== null && $hit->getT() < $distance;
     }
 }
