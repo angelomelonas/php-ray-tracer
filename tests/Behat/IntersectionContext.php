@@ -12,6 +12,7 @@ use PhpRayTracer\RayTracer\Intersection\IntersectionFactory;
 use PhpRayTracer\RayTracer\Intersection\Intersections;
 use PhpRayTracer\RayTracer\Shape\Shape;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
+use PhpRayTracer\RayTracer\Utility\Utility;
 use PHPUnit\Framework\Assert;
 use function filter_var;
 use const FILTER_VALIDATE_BOOLEAN;
@@ -40,10 +41,16 @@ final class IntersectionContext implements Context
         $this->rayContext = $environment->getContext(RayContext::class);
     }
 
-    /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (s|shape)\)$/ */
-    public function iIsAIntersectionOfSphereS(string $expression, float $t): void
+    /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (s|s1|shape)\)$/ */
+    public function iIsAIntersectionOfSphereS1(string $expression, float $t): void
     {
-        $this->createIntersection($t, $this->sphereContext->sphere);
+        $this->createIntersection($t, $this->sphereContext->sphereA);
+    }
+
+    /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (s2)\)$/ */
+    public function iIsAIntersectionOfSphereS2(string $expression, float $t): void
+    {
+        $this->createIntersection($t, $this->sphereContext->sphereB);
     }
 
     /** @Then /^(i)\.t = ([-+]?\d*\.?\d+)$/ */
@@ -55,7 +62,7 @@ final class IntersectionContext implements Context
     /** @Given /^(i)\.object = (s)$/ */
     public function intersectionObjectIsSphere(): void
     {
-        Assert::assertSame($this->sphereContext->sphere, $this->intersectionA->getObject());
+        Assert::assertSame($this->sphereContext->sphereA, $this->intersectionA->getObject());
     }
 
     /** @Given /^(xs) is a intersections\((i2), (i1)\)$/ */
@@ -198,5 +205,18 @@ final class IntersectionContext implements Context
     public function compsInsideTrueOrFalse(string $expression, string $bool): void
     {
         Assert::assertEquals(filter_var($bool, FILTER_VALIDATE_BOOLEAN), $this->computation->isInside());
+    }
+
+    /** @Then /^(comps)\.over_point\.z < (\-EPSILON\/2)$/ */
+    public function compsOverPointZEPSILON(): void
+    {
+        Assert::assertLessThan(Utility::PRECISION_TEST, $this->computation->getOverPoint()->z);
+    }
+
+    /** @Given /^(comps)\.point\.z > (comps)\.over_point\.z$/ */
+    public function compsPointZCompsOverPointZ(): void
+    {
+        $result = Utility::isFloatGreaterThanFloat($this->computation->getPoint()->z, $this->computation->getOverPoint()->z);
+        Assert::assertTrue($result);
     }
 }

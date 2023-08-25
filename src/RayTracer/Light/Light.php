@@ -6,14 +6,24 @@ namespace PhpRayTracer\RayTracer\Light;
 use PhpRayTracer\RayTracer\Tuple\Color;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
 
-final class Light
+final readonly class Light
 {
-    public function __construct(public Tuple $position, public Color $intensity)
+    public function __construct(private Tuple $position, private Color $intensity)
     {
     }
 
     public function isEqualTo(Light $light): bool
     {
         return $this->position->isEqualTo($light->position) && $this->intensity->isEqualTo($light->intensity);
+    }
+
+    public function getPosition(): Tuple
+    {
+        return $this->position;
+    }
+
+    public function getIntensity(): Color
+    {
+        return $this->intensity;
     }
 }

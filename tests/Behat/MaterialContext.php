@@ -5,7 +5,6 @@ namespace PhpRayTracer\Tests\Behat;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Tester\Exception\PendingException;
 use PhpRayTracer\RayTracer\Material\Material;
 use PhpRayTracer\RayTracer\Tuple\Color;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
@@ -15,6 +14,7 @@ final class MaterialContext implements Context
 {
     public Material $material;
     private Color $colorResult;
+    private bool $inShadow = false;
 
     private TupleContext $tupleContext;
     private LightContext $lightContext;
@@ -60,6 +60,12 @@ final class MaterialContext implements Context
         Assert::assertEquals($value, $this->material->specular);
     }
 
+    /** @Given /^in_shadow is (true$)/ */
+    public function inShadowIsTrue(): void
+    {
+        $this->inShadow = true;
+    }
+
     /** @Given /^(m)\.shininess = ([-+]?\d*\.?\d+)$/ */
     public function mShininess(string $expression, float $value): void
     {
@@ -73,7 +79,20 @@ final class MaterialContext implements Context
             $this->lightContext->light,
             $this->tupleContext->tupleA,
             $this->tupleContext->tupleB,
-            $this->tupleContext->tupleC
+            $this->tupleContext->tupleC,
+            $this->inShadow
+        );
+    }
+
+    /** @When /^(result) is a lighting\((m), (light), (position), (eyev), (normalv), (in_shadow)\)$/ */
+    public function resultIsALightingMLightPositionEyevNormalvInShadow(): void
+    {
+        $this->colorResult = $this->material->lighting(
+            $this->lightContext->light,
+            $this->tupleContext->tupleA,
+            $this->tupleContext->tupleB,
+            $this->tupleContext->tupleC,
+            $this->inShadow
         );
     }
 
@@ -81,11 +100,5 @@ final class MaterialContext implements Context
     public function resultIsColor(string $expression, float $red, float $green, float $blue): void
     {
         Assert::assertTrue(ColorFactory::create($red, $green, $blue)->isEqualTo($this->colorResult));
-    }
-
-    /** @Then /^(m)\.reflective = ([-+]?\d*\.?\d+)$/ */
-    public function mReflective(string $expression, float $value): void
-    {
-        throw new PendingException();
     }
 }
