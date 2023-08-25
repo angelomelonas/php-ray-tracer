@@ -27,7 +27,7 @@ final class IntersectionContext implements Context
     private ?Intersection $hit = null;
     public Computation $computation;
 
-    private SphereContext $sphereContext;
+    private ShapeContext $shapeContext;
     private RayContext $rayContext;
 
     /** @BeforeScenario */
@@ -36,7 +36,7 @@ final class IntersectionContext implements Context
         $environment = $scope->getEnvironment();
 
         /* @phpstan-ignore-next-line */
-        $this->sphereContext = $environment->getContext(SphereContext::class);
+        $this->shapeContext = $environment->getContext(ShapeContext::class);
         /* @phpstan-ignore-next-line */
         $this->rayContext = $environment->getContext(RayContext::class);
     }
@@ -44,13 +44,13 @@ final class IntersectionContext implements Context
     /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (s|s1|shape)\)$/ */
     public function iIsAIntersectionOfSphereS1(string $expression, float $t): void
     {
-        $this->createIntersection($t, $this->sphereContext->sphereA);
+        $this->createIntersection($t, $this->shapeContext->shapeA);
     }
 
     /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (s2)\)$/ */
     public function iIsAIntersectionOfSphereS2(string $expression, float $t): void
     {
-        $this->createIntersection($t, $this->sphereContext->sphereB);
+        $this->createIntersection($t, $this->shapeContext->shapeB);
     }
 
     /** @Then /^(i)\.t = ([-+]?\d*\.?\d+)$/ */
@@ -62,7 +62,7 @@ final class IntersectionContext implements Context
     /** @Given /^(i)\.object = (s)$/ */
     public function intersectionObjectIsSphere(): void
     {
-        Assert::assertSame($this->sphereContext->sphereA, $this->intersectionA->getObject());
+        Assert::assertSame($this->shapeContext->shapeA, $this->intersectionA->getObject());
     }
 
     /** @Given /^(xs) is a intersections\((i2), (i1)\)$/ */

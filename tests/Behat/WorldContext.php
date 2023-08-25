@@ -22,16 +22,13 @@ final class WorldContext implements Context
 {
     public World $world;
     public Light $light;
-
-    private Shape $shapeB;
-
     private Color $shadeHit;
 
     private LightContext $lightContext;
     private RayContext $rayContext;
     private IntersectionContext $intersectionContext;
     private TupleContext $tupleContext;
-    private SphereContext $sphereContext;
+    private ShapeContext $shapeContext;
 
     /** @BeforeScenario */
     public function gatherContexts(BeforeScenarioScope $scope): void
@@ -47,7 +44,7 @@ final class WorldContext implements Context
         /* @phpstan-ignore-next-line */
         $this->tupleContext = $environment->getContext(TupleContext::class);
         /* @phpstan-ignore-next-line */
-        $this->sphereContext = $environment->getContext(SphereContext::class);
+        $this->shapeContext = $environment->getContext(ShapeContext::class);
     }
 
     /** @Given /^(w) is a world\(\)$/ */
@@ -79,23 +76,21 @@ final class WorldContext implements Context
 
         $this->world->setLight($this->lightContext->light);
 
-        if (! isset($this->sphereContext->sphereA)) {
-            $this->sphereContext->sphereA = ShapeFactory::createSphere();
+        if (! isset($this->shapeContext->shapeA)) {
+            $this->shapeContext->shapeA = ShapeFactory::createSphere();
             $material = MaterialFactory::create();
             $material->color = ColorFactory::create(0.8, 1.0, 0.6);
             $material->diffuse = 0.7;
             $material->specular = 0.2;
-            $this->sphereContext->sphereA->setMaterial($material);
+            $this->shapeContext->shapeA->setMaterial($material);
         }
+        $this->world->addShape($this->shapeContext->shapeA);
 
-        $this->world->addShape($this->sphereContext->sphereA);
-
-        if (! isset($this->shapeB)) {
-            $this->shapeB = ShapeFactory::createSphere();
-            $this->shapeB->setTransform(MatrixFactory::createScaling(0.5, 0.5, 0.5));
+        if (! isset($this->shapeContext->shapeB)) {
+            $this->shapeContext->shapeB= ShapeFactory::createSphere();
+            $this->shapeContext->shapeB->setTransform(MatrixFactory::createScaling(0.5, 0.5, 0.5));
         }
-
-        $this->world->addShape($this->shapeB);
+        $this->world->addShape($this->shapeContext->shapeB);
     }
 
     /** @Then /^(w)\.light = (light)$/ */
@@ -108,13 +103,13 @@ final class WorldContext implements Context
     /** @Given /^(w) contains (s1)$/ */
     public function wContainsSphereS1(): void
     {
-        Assert::assertSame($this->sphereContext->sphereA, $this->world->getShape(0));
+        Assert::assertSame($this->shapeContext->shapeA, $this->world->getShape(0));
     }
 
     /** @Given /^(w) contains (s2)$/ */
     public function wContainsSphereS2(): void
     {
-        Assert::assertSame($this->shapeB, $this->world->getShape(1));
+        Assert::assertSame($this->shapeContext->shapeB, $this->world->getShape(1));
     }
 
     /** @When /^(xs) is the intersections of intersect_world\((w), (r)\)$/ */
@@ -126,25 +121,25 @@ final class WorldContext implements Context
     /** @Given /^(shape|outer) is the first object in (w)$/ */
     public function shapeIsATheFirstObjectInW(): void
     {
-        Assert::assertSame($this->sphereContext->sphereA, $this->world->getShape(0));
+        Assert::assertSame($this->shapeContext->shapeA, $this->world->getShape(0));
     }
 
     /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (shapeA)\)$/ */
     public function iIsAIntersectionOfWorldShapeA(string $expression, float $t): void
     {
-        $this->intersectionContext->createIntersection($t, $this->sphereContext->sphereA);
+        $this->intersectionContext->createIntersection($t, $this->shapeContext->shapeA);
     }
 
     /** @When /^([^"]+) is a intersection\(([-+]?\d*\.?\d+), (shapeB)\)$/ */
     public function iIsAIntersectionOfWorldShapeB(string $expression, float $t): void
     {
-        $this->intersectionContext->createIntersection($t, $this->shapeB);
+        $this->intersectionContext->createIntersection($t, $this->shapeContext->shapeB);
     }
 
     /** @Given /^(shape|inner) is the second object in (w)$/ */
     public function shapeIsATheSecondObjectInW(): void
     {
-        Assert::assertSame($this->shapeB, $this->world->getShape(1));
+        Assert::assertSame($this->shapeContext->shapeB, $this->world->getShape(1));
     }
 
     /** @Given /^(c) is a shade_hit\((w), (comps)\)$/ */
@@ -174,19 +169,19 @@ final class WorldContext implements Context
     /** @Given /^(outer)\.(material)\.(ambient) is a ([-+]?\d*\.?\d+)$/ */
     public function shapeAMaterialAmbientIsA(string $expression1, string $expression2, string $expression3, float $value): void
     {
-        $this->sphereContext->sphereA->getMaterial()->ambient = $value;
+        $this->shapeContext->shapeA->getMaterial()->ambient = $value;
     }
 
     /** @Given /^(inner)\.(material)\.(ambient) is a ([-+]?\d*\.?\d+)$/ */
     public function shapeBMaterialAmbientIsA(string $expression1, string $expression2, string $expression3, float $value): void
     {
-        $this->shapeB->getMaterial()->ambient = $value;
+        $this->shapeContext->shapeB->getMaterial()->ambient = $value;
     }
 
     /** @Then /^c = (inner)\.material\.color$/ */
     public function cShapeMaterialColor(): void
     {
-        Assert::assertTrue($this->shapeB->getMaterial()->color->isEqualTo($this->shadeHit));
+        Assert::assertTrue($this->shapeContext->shapeB->getMaterial()->color->isEqualTo($this->shadeHit));
     }
 
     /** @Then /^is_shadowed\((w), (p)\) is (false|true)$/ */
@@ -198,12 +193,12 @@ final class WorldContext implements Context
     /** @Given /^(s1) is added to (w)$/ */
     public function sphereS1IsAddedToW(): void
     {
-        $this->world->addShape($this->sphereContext->sphereA);
+        $this->world->addShape($this->shapeContext->shapeA);
     }
 
     /** @Given /^(s2) is added to (w)$/ */
     public function sphereS2IsAddedToW(): void
     {
-        $this->world->addShape($this->sphereContext->sphereB);
+        $this->world->addShape($this->shapeContext->shapeB);
     }
 }
