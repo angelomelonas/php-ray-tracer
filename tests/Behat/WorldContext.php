@@ -84,12 +84,14 @@ final class WorldContext implements Context
             $material->specular = 0.2;
             $this->shapeContext->shapeA->setMaterial($material);
         }
+
         $this->world->addShape($this->shapeContext->shapeA);
 
         if (! isset($this->shapeContext->shapeB)) {
             $this->shapeContext->shapeB= ShapeFactory::createSphere();
             $this->shapeContext->shapeB->setTransform(MatrixFactory::createScaling(0.5, 0.5, 0.5));
         }
+
         $this->world->addShape($this->shapeContext->shapeB);
     }
 
