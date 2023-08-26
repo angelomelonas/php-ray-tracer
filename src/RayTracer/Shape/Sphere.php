@@ -5,10 +5,6 @@ namespace PhpRayTracer\RayTracer\Shape;
 
 use PhpRayTracer\RayTracer\Intersection\Intersection;
 use PhpRayTracer\RayTracer\Intersection\IntersectionFactory;
-use PhpRayTracer\RayTracer\Material\Material;
-use PhpRayTracer\RayTracer\Material\MaterialFactory;
-use PhpRayTracer\RayTracer\Matrix\Matrix;
-use PhpRayTracer\RayTracer\Matrix\MatrixFactory;
 use PhpRayTracer\RayTracer\Ray\Ray;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
@@ -17,43 +13,11 @@ use function pow;
 use function sqrt;
 use const SORT_NUMERIC;
 
-final class Sphere implements Shape
+final class Sphere extends Shape
 {
-    public Tuple $origin;
-    public Matrix $transformationMatrix;
-    private Material $material;
-
-    public function __construct()
-    {
-        $this->origin = TupleFactory::createPoint(0, 0, 0);
-        $this->transformationMatrix = MatrixFactory::createIdentity(MatrixFactory::MATRIX_4X4);
-        $this->material = MaterialFactory::create();
-    }
-
-    public function getTransform(): Matrix
-    {
-        return $this->transformationMatrix;
-    }
-
-    public function setTransform(Matrix $matrix): Matrix
-    {
-        return $this->transformationMatrix = $matrix;
-    }
-
-    public function getMaterial(): Material
-    {
-        return $this->material;
-    }
-
-    public function setMaterial(Material $material): Material
-    {
-        return $this->material = $material;
-    }
-
     /** @return Intersection[] */
-    public function intersect(Ray $ray): array
+    protected function localIntersect(Ray $ray): array
     {
-        $ray = $ray->transform($this->getTransform()->inverse());
         $sphereToRay = $ray->origin->subtract($this->origin);
 
         $a = $ray->direction->dot($ray->direction);
@@ -78,13 +42,8 @@ final class Sphere implements Shape
         ];
     }
 
-    public function normalAt(Tuple $point): Tuple
+    protected function localNormalAt(Tuple $point): Tuple
     {
-        $objectPoint = $this->getTransform()->inverse()->multiplyTuple($point);
-        $objectNormal = $objectPoint->subtract(TupleFactory::createPoint(0, 0, 0));
-        $worldNormal = $this->getTransform()->inverse()->transpose()->multiplyTuple($objectNormal);
-        $worldNormal->w = 0;
-
-        return $worldNormal->normalize();
+        return TupleFactory::createVector($point->x, $point->y, $point->z);
     }
 }

@@ -9,4 +9,9 @@ final class ShapeFactory
     {
         return new Sphere();
     }
+
+    public static function createPlane(): Plane
+    {
+        return new Plane();
+    }
 }

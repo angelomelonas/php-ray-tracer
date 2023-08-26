@@ -38,13 +38,13 @@ final class LightContext implements Context
     /** @Then /^(light)\.position = (position)$/ */
     public function lightPositionIsPosition(): void
     {
-        Assert::assertTrue($this->light->position->isEqualTo($this->tupleContext->tupleA));
+        Assert::assertTrue($this->light->getPosition()->isEqualTo($this->tupleContext->tupleA));
     }
 
     /** @Given /^(light)\.intensity = (intensity)$/ */
     public function lightIntensityIsIntensity(): void
     {
-        Assert::assertTrue($this->light->intensity->isEqualTo($this->colorContext->colorA));
+        Assert::assertTrue($this->light->getIntensity()->isEqualTo($this->colorContext->colorA));
     }
 
     /** @Given /^(light) is a point_light\(point\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\), color\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)\)$/ */

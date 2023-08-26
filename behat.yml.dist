@@ -13,6 +13,8 @@ default:
         - PhpRayTracer\Tests\Behat\MaterialContext
         - PhpRayTracer\Tests\Behat\WorldContext
         - PhpRayTracer\Tests\Behat\CameraContext
+        - PhpRayTracer\Tests\Behat\ShapeContext
+        - PhpRayTracer\Tests\Behat\PlaneContext
 
   extensions:
     FriendsOfBehat\SymfonyExtension:
