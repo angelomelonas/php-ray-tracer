@@ -15,6 +15,7 @@ default:
         - PhpRayTracer\Tests\Behat\CameraContext
         - PhpRayTracer\Tests\Behat\ShapeContext
         - PhpRayTracer\Tests\Behat\PlaneContext
+        - PhpRayTracer\Tests\Behat\PatternContext
 
   extensions:
     FriendsOfBehat\SymfonyExtension:

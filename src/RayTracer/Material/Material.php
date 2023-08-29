@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace PhpRayTracer\RayTracer\Material;
 
 use PhpRayTracer\RayTracer\Light\Light;
+use PhpRayTracer\RayTracer\Pattern\Pattern;
+use PhpRayTracer\RayTracer\Shape\Shape;
 use PhpRayTracer\RayTracer\Tuple\Color;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
@@ -83,17 +85,21 @@ final class Material
 
     public function lighting(
         Light $light,
+        Shape $shape,
         Tuple $position,
         Tuple $eyeVector,
         Tuple $normalVector,
         bool $inShadow,
     ): Color {
-        $effectiveColor = $this->color->hadamardProduct($light->getIntensity());
+        if ($this->pattern !== null) {
+            $color = $this->pattern->patternAtShape($shape, $position);
+        } else {
+            $color = $this->color;
+        }
 
+        $effectiveColor = $color->hadamardProduct($light->getIntensity());
         $lightVector = $light->getPosition()->subtract($position)->normalize();
-
         $ambient = $effectiveColor->multiply($this->ambient);
-
         $lightDotNormal = $lightVector->dot($normalVector);
 
         if ($lightDotNormal < 0) {
