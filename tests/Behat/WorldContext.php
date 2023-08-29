@@ -79,9 +79,9 @@ final class WorldContext implements Context
         if (! isset($this->shapeContext->shapeA)) {
             $this->shapeContext->shapeA = ShapeFactory::createSphere();
             $material = MaterialFactory::create();
-            $material->color = ColorFactory::create(0.8, 1.0, 0.6);
-            $material->diffuse = 0.7;
-            $material->specular = 0.2;
+            $material->setColor(ColorFactory::create(0.8, 1.0, 0.6));
+            $material->setDiffuse(0.7);
+            $material->setSpecular(0.2);
             $this->shapeContext->shapeA->setMaterial($material);
         }
 
@@ -144,13 +144,13 @@ final class WorldContext implements Context
         Assert::assertSame($this->shapeContext->shapeB, $this->world->getShape(1));
     }
 
-    /** @Given /^(c) is a shade_hit\((w), (comps)\)$/ */
+    /** @Given /^(world_c) is a shade_hit\((w), (comps)\)$/ */
     public function cIsAShadeHit(): void
     {
         $this->shadeHit = $this->world->shadeHit($this->intersectionContext->computation);
     }
 
-    /** @Then /^(c) = color\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
+    /** @Then /^(world_c) = color\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
     public function shadeHitCIsEqualToColor(string $expression, float $red, float $green, float $blue): void
     {
         Assert::assertTrue(ColorFactory::create($red, $green, $blue)->isEqualTo($this->shadeHit));
@@ -162,7 +162,7 @@ final class WorldContext implements Context
         $this->world->setLight(LightFactory::create(TupleFactory::createPoint($x, $y, $z), ColorFactory::create($red, $green, $blue)));
     }
 
-    /** @When /^(c) is a color_at\((w), (r)\)$/ */
+    /** @When /^(world_c) is a color_at\((w), (r)\)$/ */
     public function cIsAColorAt(): void
     {
         $this->shadeHit = $this->world->colorAt($this->rayContext->rayA);
@@ -171,19 +171,19 @@ final class WorldContext implements Context
     /** @Given /^(outer)\.(material)\.(ambient) is a ([-+]?\d*\.?\d+)$/ */
     public function shapeAMaterialAmbientIsA(string $expression1, string $expression2, string $expression3, float $value): void
     {
-        $this->shapeContext->shapeA->getMaterial()->ambient = $value;
+        $this->shapeContext->shapeA->getMaterial()->setAmbient($value);
     }
 
     /** @Given /^(inner)\.(material)\.(ambient) is a ([-+]?\d*\.?\d+)$/ */
     public function shapeBMaterialAmbientIsA(string $expression1, string $expression2, string $expression3, float $value): void
     {
-        $this->shapeContext->shapeB->getMaterial()->ambient = $value;
+        $this->shapeContext->shapeB->getMaterial()->setAmbient($value);
     }
 
-    /** @Then /^c = (inner)\.material\.color$/ */
+    /** @Then /^(world_c) = (inner)\.material\.color$/ */
     public function cShapeMaterialColor(): void
     {
-        Assert::assertTrue($this->shapeContext->shapeB->getMaterial()->color->isEqualTo($this->shadeHit));
+        Assert::assertTrue($this->shapeContext->shapeB->getMaterial()->getColor()->isEqualTo($this->shadeHit));
     }
 
     /** @Then /^is_shadowed\((w), (p)\) is (false|true)$/ */

@@ -8,6 +8,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use PhpRayTracer\RayTracer\Material\Material;
 use PhpRayTracer\RayTracer\Tuple\Color;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
+use PhpRayTracer\Tests\Behat\Utility\TestShape;
 use PHPUnit\Framework\Assert;
 
 final class MaterialContext implements Context
@@ -39,25 +40,25 @@ final class MaterialContext implements Context
     /** @Then /^(m)\.color = color\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
     public function mColorColor(string $expression, float $x, float $y, float $z): void
     {
-        Assert::assertTrue(ColorFactory::create($x, $y, $z)->isEqualTo($this->material->color));
+        Assert::assertTrue(ColorFactory::create($x, $y, $z)->isEqualTo($this->material->getColor()));
     }
 
     /** @Given /^(m)\.ambient = ([-+]?\d*\.?\d+)$/ */
     public function mAmbient(string $expression, float $value): void
     {
-        Assert::assertEquals($value, $this->material->ambient);
+        Assert::assertEquals($value, $this->material->getAmbient());
     }
 
     /** @Given /^(m)\.diffuse = ([-+]?\d*\.?\d+)$/ */
     public function mDiffuse(string $expression, float $value): void
     {
-        Assert::assertEquals($value, $this->material->diffuse);
+        Assert::assertEquals($value, $this->material->getDiffuse());
     }
 
     /** @Given /^(m)\.specular = ([-+]?\d*\.?\d+)$/ */
     public function mSpecular(string $expression, float $value): void
     {
-        Assert::assertEquals($value, $this->material->specular);
+        Assert::assertEquals($value, $this->material->getSpecular());
     }
 
     /** @Given /^in_shadow is (true$)/ */
@@ -69,7 +70,7 @@ final class MaterialContext implements Context
     /** @Given /^(m)\.shininess = ([-+]?\d*\.?\d+)$/ */
     public function mShininess(string $expression, float $value): void
     {
-        Assert::assertEquals($value, $this->material->shininess);
+        Assert::assertEquals($value, $this->material->getShininess());
     }
 
     /** @When /^(result) is a lighting\((m), (light), (position), (eyev), (normalv)\)$/ */
@@ -77,6 +78,7 @@ final class MaterialContext implements Context
     {
         $this->colorResult = $this->material->lighting(
             $this->lightContext->light,
+            new TestShape(),
             $this->tupleContext->tupleA,
             $this->tupleContext->tupleB,
             $this->tupleContext->tupleC,
@@ -89,6 +91,7 @@ final class MaterialContext implements Context
     {
         $this->colorResult = $this->material->lighting(
             $this->lightContext->light,
+            new TestShape(),
             $this->tupleContext->tupleA,
             $this->tupleContext->tupleB,
             $this->tupleContext->tupleC,

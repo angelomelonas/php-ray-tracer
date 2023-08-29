@@ -22,7 +22,7 @@ $world->addShape(createLargeSphere());
 $world->addShape(createSmallRightSphere());
 $world->addShape(createSmallLeftSphere());
 
-$camera = createCamera(100, 50, M_PI / 3);
+$camera = createCamera(400, 200, M_PI / 3);
 
 $startTime = microtime(true);
 
@@ -43,8 +43,8 @@ function createFloor(): Shape
     $floor = new Sphere();
     $floor->setTransform(MatrixFactory::createScaling(10, 0.01, 10));
     $material = $floor->getMaterial();
-    $material->color = ColorFactory::create(226/255,193/255,169/255);
-    $material->specular = 0;
+    $material->setColor(ColorFactory::create(226/255,193/255,169/255));
+    $material->setSpecular(0);
 
     return $floor;
 }
@@ -58,8 +58,8 @@ function createLeftWall(): Shape
     $scaling = MatrixFactory::createScaling(10, 0.01, 10);
     $leftWall->setTransform($translation->multiplyMatrix($rotationY)->multiplyMatrix($rotationX)->multiplyMatrix($scaling));
     $material = $leftWall->getMaterial();
-    $material->color = ColorFactory::create(243/255,222/255,201/255);
-    $material->specular = 0;
+    $material->setColor(ColorFactory::create(243/255,222/255,201/255));
+    $material->setSpecular(0);
 
     return $leftWall;
 }
@@ -73,8 +73,8 @@ function createRightWall(): Shape
     $scaling = MatrixFactory::createScaling(10, 0.01, 10);
     $rightWall->setTransform($translation->multiplyMatrix($rotationY)->multiplyMatrix($rotationX)->multiplyMatrix($scaling));
     $material = $rightWall->getMaterial();
-    $material->color = ColorFactory::create(234/255,210/255,190/255);
-    $material->specular = 0;
+    $material->setColor(ColorFactory::create(234/255,210/255,190/255));
+    $material->setSpecular(0);
 
     return $rightWall;
 }
@@ -85,9 +85,9 @@ function createLargeSphere(): Shape
     $translation = MatrixFactory::createTranslation(-0.5, 1, 0.5);
     $largeSphere->setTransform($translation);
     $material = $largeSphere->getMaterial();
-    $material->color = ColorFactory::create(125/255,220/255,31/255);
-    $material->diffuse = 0.7;
-    $material->specular = 0.3;
+    $material->setColor(ColorFactory::create(125/255,220/255,31/255));
+    $material->setDiffuse(0.7);
+    $material->setSpecular(0.3);
 
     return $largeSphere;
 }
@@ -99,9 +99,9 @@ function createSmallRightSphere(): Shape
     $scaling = MatrixFactory::createScaling(0.5, 0.5, 0.5);
     $smallRightSphere->setTransform($translation->multiplyMatrix($scaling));
     $material = $smallRightSphere->getMaterial();
-    $material->color = ColorFactory::create(1,165/255,0);
-    $material->diffuse = 0.7;
-    $material->specular = 0.3;
+    $material->setColor(ColorFactory::create(1,165/255,0));
+    $material->setDiffuse(0.7);
+    $material->setSpecular(0.3);
 
     return $smallRightSphere;
 }
@@ -113,9 +113,9 @@ function createSmallLeftSphere(): Shape
     $scaling = MatrixFactory::createScaling(0.33, 0.33, 0.33);
     $smallLeftSphere->setTransform($translation->multiplyMatrix($scaling));
     $material = $smallLeftSphere->getMaterial();
-    $material->color = ColorFactory::create(1,37/255,0);
-    $material->diffuse = 0.7;
-    $material->specular = 0.3;
+    $material->setColor(ColorFactory::create(1,37/255,0));
+    $material->setDiffuse(0.7);
+    $material->setSpecular(0.3);
 
     return $smallLeftSphere;
 }
@@ -129,8 +129,8 @@ function createCamera(int $hSize, int $vSize, float $fieldOfView): Camera
 {
     $camera = CameraFactory::create($hSize, $vSize, $fieldOfView);
     $camera->setTransform(MatrixFactory::createViewTransformation(
-        TupleFactory::createPoint(0, 1.5, -5),
-        TupleFactory::createPoint(0, 1, 0),
+        TupleFactory::createPoint(0, 0.9, -6),
+        TupleFactory::createPoint(0, 0.5, 0),
         TupleFactory::createVector(0, 1, 0)
     ));
 

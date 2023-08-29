@@ -136,35 +136,6 @@ final class IntersectionContext implements Context
         ]);
     }
 
-    public function createIntersection(float $t, Shape $shape): Intersection
-    {
-        if (! isset($this->intersectionA)) {
-            $this->intersectionA = IntersectionFactory::create($t, $shape);
-
-            return $this->intersectionA;
-        }
-
-        if (! isset($this->intersectionB)) {
-            $this->intersectionB = IntersectionFactory::create($t, $shape);
-
-            return $this->intersectionB;
-        }
-
-        if (! isset($this->intersectionC)) {
-            $this->intersectionC = IntersectionFactory::create($t, $shape);
-
-            return $this->intersectionC;
-        }
-
-        if (! isset($this->intersectionD)) {
-            $this->intersectionD = IntersectionFactory::create($t, $shape);
-
-            return $this->intersectionD;
-        }
-
-        throw new LogicException('No intersection is set.');
-    }
-
     /** @When /^(comps) is a prepare_computations\((i), (r)\)$/ */
     public function compsIsAPrepareComputations(): void
     {
@@ -180,7 +151,7 @@ final class IntersectionContext implements Context
     /** @Given /^(comps)\.object = i\.object$/ */
     public function compsObjectIObject(): void
     {
-        Assert::assertSame($this->intersectionA->getObject(), $this->computation->getObject());
+        Assert::assertSame($this->intersectionA->getObject(), $this->computation->getShape());
     }
 
     /** @Given /^(comps)\.point = point\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
@@ -218,5 +189,34 @@ final class IntersectionContext implements Context
     {
         $result = Utility::isFloatGreaterThanFloat($this->computation->getPoint()->z, $this->computation->getOverPoint()->z);
         Assert::assertTrue($result);
+    }
+
+    public function createIntersection(float $t, Shape $shape): Intersection
+    {
+        if (! isset($this->intersectionA)) {
+            $this->intersectionA = IntersectionFactory::create($t, $shape);
+
+            return $this->intersectionA;
+        }
+
+        if (! isset($this->intersectionB)) {
+            $this->intersectionB = IntersectionFactory::create($t, $shape);
+
+            return $this->intersectionB;
+        }
+
+        if (! isset($this->intersectionC)) {
+            $this->intersectionC = IntersectionFactory::create($t, $shape);
+
+            return $this->intersectionC;
+        }
+
+        if (! isset($this->intersectionD)) {
+            $this->intersectionD = IntersectionFactory::create($t, $shape);
+
+            return $this->intersectionD;
+        }
+
+        throw new LogicException('No intersection is set.');
     }
 }

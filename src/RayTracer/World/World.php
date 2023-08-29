@@ -70,8 +70,9 @@ final class World
 
         $isShadowed = $this->isShadowed($computation->getOverPoint());
 
-        return $computation->getObject()->getMaterial()->lighting(
+        return $computation->getShape()->getMaterial()->lighting(
             $this->light,
+            $computation->getShape(),
             $computation->getPoint(),
             $computation->getEyeVector(),
             $computation->getNormalVector(),

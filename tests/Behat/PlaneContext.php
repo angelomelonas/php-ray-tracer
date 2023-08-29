@@ -15,11 +15,10 @@ use PHPUnit\Framework\Assert;
 
 final class PlaneContext implements Context
 {
-    private ShapeContext $shapeContext;
-
     /** @var Intersection[] */
     private array $localIntersections;
 
+    private ShapeContext $shapeContext;
     private RayContext $rayContext;
 
     /** @BeforeScenario */

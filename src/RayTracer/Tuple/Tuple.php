@@ -17,6 +17,26 @@ class Tuple
     {
     }
 
+    public function getX(): float
+    {
+        return $this->x;
+    }
+
+    public function getY(): float
+    {
+        return $this->y;
+    }
+
+    public function getZ(): float
+    {
+        return $this->z;
+    }
+
+    public function getW(): float
+    {
+        return $this->w;
+    }
+
     public function isPoint(): bool
     {
         return $this->w === self::POINT;

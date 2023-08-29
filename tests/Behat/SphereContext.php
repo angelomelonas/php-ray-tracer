@@ -48,9 +48,9 @@ final class SphereContext implements Context
         [$red, $green, $blue] = $values;
 
         $material = MaterialFactory::create();
-        $material->color = ColorFactory::create(floatval($red), floatval($green), floatval($blue));
-        $material->diffuse = floatval($table->getRow(1)[1]);
-        $material->specular = floatval($table->getRow(2)[1]);
+        $material->setColor(ColorFactory::create(floatval($red), floatval($green), floatval($blue)));
+        $material->setDiffuse(floatval($table->getRow(1)[1]));
+        $material->setSpecular(floatval($table->getRow(2)[1]));
 
         $this->createSphere($material);
     }

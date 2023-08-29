@@ -21,7 +21,7 @@ $half = $wallSize / 2;
 
 $shape = new Sphere();
 $material = MaterialFactory::create();
-$material->color = ColorFactory::create(0, 0.9, 0.1);
+$material->setColor(ColorFactory::create(0, 0.9, 0.1));
 $shape->setMaterial($material);
 
 

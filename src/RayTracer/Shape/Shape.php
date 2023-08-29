@@ -53,9 +53,6 @@ abstract class Shape
         return $this->localIntersect($ray);
     }
 
-    /** @return Intersection[] */
-    abstract protected function localIntersect(Ray $ray): array;
-
     public function normalAt(Tuple $point): Tuple
     {
         $localPoint = $this->getTransform()->inverse()->multiplyTuple($point);
@@ -65,6 +62,9 @@ abstract class Shape
 
         return $worldNormal->normalize();
     }
+
+    /** @return Intersection[] */
+    abstract protected function localIntersect(Ray $ray): array;
 
     abstract protected function localNormalAt(Tuple $point): Tuple;
 }
