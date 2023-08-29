@@ -14,7 +14,7 @@ final class Computation
 
     public function __construct(
         private readonly float $t,
-        private readonly Shape $object,
+        private readonly Shape $shape,
         private readonly Tuple $point,
         private readonly Tuple $eyeVector,
         private Tuple $normalVector,
@@ -34,9 +34,9 @@ final class Computation
         return $this->t;
     }
 
-    public function getObject(): Shape
+    public function getShape(): Shape
     {
-        return $this->object;
+        return $this->shape;
     }
 
     public function getPoint(): Tuple

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace PhpRayTracer\RayTracer\Material;
 
 use PhpRayTracer\RayTracer\Light\Light;
+use PhpRayTracer\RayTracer\Pattern\Pattern;
+use PhpRayTracer\RayTracer\Shape\Shape;
 use PhpRayTracer\RayTracer\Tuple\Color;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
@@ -12,27 +14,92 @@ use function pow;
 final class Material
 {
     public function __construct(
-        public Color $color = new Color(1, 1, 1),
-        public float $ambient = 0.1,
-        public float $diffuse = 0.9,
-        public float $specular = 0.9,
-        public float $shininess = 200.0,
+        private Color $color = new Color(1, 1, 1),
+        private float $ambient = 0.1,
+        private float $diffuse = 0.9,
+        private float $specular = 0.9,
+        private float $shininess = 200.0,
+        private ?Pattern $pattern = null,
     ) {
+    }
+
+    public function getColor(): Color
+    {
+        return $this->color;
+    }
+
+    public function setColor(Color $color): void
+    {
+        $this->color = $color;
+    }
+
+    public function getAmbient(): float
+    {
+        return $this->ambient;
+    }
+
+    public function setAmbient(float $ambient): void
+    {
+        $this->ambient = $ambient;
+    }
+
+    public function getDiffuse(): float
+    {
+        return $this->diffuse;
+    }
+
+    public function setDiffuse(float $diffuse): void
+    {
+        $this->diffuse = $diffuse;
+    }
+
+    public function getSpecular(): float
+    {
+        return $this->specular;
+    }
+
+    public function setSpecular(float $specular): void
+    {
+        $this->specular = $specular;
+    }
+
+    public function getShininess(): float
+    {
+        return $this->shininess;
+    }
+
+    public function setShininess(float $shininess): void
+    {
+        $this->shininess = $shininess;
+    }
+
+    public function getPattern(): ?Pattern
+    {
+        return $this->pattern;
+    }
+
+    public function setPattern(?Pattern $pattern): void
+    {
+        $this->pattern = $pattern;
     }
 
     public function lighting(
         Light $light,
+        Shape $shape,
         Tuple $position,
         Tuple $eyeVector,
         Tuple $normalVector,
         bool $inShadow,
     ): Color {
-        $effectiveColor = $this->color->hadamardProduct($light->getIntensity());
+        if ($this->pattern !== null) {
+            $color = $this->pattern->patternAtShape($shape, $position);
+        } else {
+            $color = $this->color;
+        }
 
+        $effectiveColor = $color->hadamardProduct($light->getIntensity());
         $lightVector = $light->getPosition()->subtract($position)->normalize();
-
         $ambient = $effectiveColor->multiply($this->ambient);
-
         $lightDotNormal = $lightVector->dot($normalVector);
 
         if ($lightDotNormal < 0) {

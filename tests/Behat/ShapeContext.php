@@ -162,7 +162,7 @@ final class ShapeContext implements Context
     /** @When /^(m)\.ambient is a (\d+)$/ */
     public function mMaterialAmbientIs(string $expression, int $value): void
     {
-        $this->materialContext->material->ambient = $value;
+        $this->materialContext->material->setAmbient($value);
     }
 
     /** @When /^s\.material is a (m)$/ */

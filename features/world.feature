@@ -34,8 +34,8 @@ Feature: World
     And shape is the first object in w
     And i is a intersection(4, shapeA)
     When comps is a prepare_computations(i, r)
-    And c is a shade_hit(w, comps)
-    Then c = color(0.38066, 0.47583, 0.2855)
+    And world_c is a shade_hit(w, comps)
+    Then world_c = color(0.38066, 0.47583, 0.2855)
 
   Scenario: Shading an intersection from the inside
     Given w is a default_world()
@@ -44,20 +44,20 @@ Feature: World
     And shape is the second object in w
     And i is a intersection(0.5, shapeB)
     When comps is a prepare_computations(i, r)
-    And c is a shade_hit(w, comps)
-    Then c = color(0.90498, 0.90498, 0.90498)
+    And world_c is a shade_hit(w, comps)
+    Then world_c = color(0.90498, 0.90498, 0.90498)
 
   Scenario: The color when a ray misses
     Given w is a default_world()
     And r is a ray(point(0, 0, -5), vector(0, 1, 0))
-    When c is a color_at(w, r)
-    Then c = color(0, 0, 0)
+    When world_c is a color_at(w, r)
+    Then world_c = color(0, 0, 0)
 
   Scenario: The color when a ray hits
     Given w is a default_world()
     And r is a ray(point(0, 0, -5), vector(0, 0, 1))
-    When c is a color_at(w, r)
-    Then c = color(0.38066, 0.47583, 0.2855)
+    When world_c is a color_at(w, r)
+    Then world_c = color(0.38066, 0.47583, 0.2855)
 
   Scenario: The color with an intersection behind the ray
     Given w is a default_world()
@@ -66,8 +66,8 @@ Feature: World
     And inner is the second object in w
     And inner.material.ambient is a 1
     And r is a ray(point(0, 0, 0.75), vector(0, 0, -1))
-    When c is a color_at(w, r)
-    Then c = inner.material.color
+    When world_c is a color_at(w, r)
+    Then world_c = inner.material.color
 
   Scenario: There is no shadow when nothing is collinear with point and light
     Given w is a default_world()
@@ -100,8 +100,8 @@ Feature: World
     And r is a ray(point(0, 0, 5), vector(0, 0, 1))
     And i is a intersection(4, s2)
     When comps is a prepare_computations(i, r)
-    And c is a shade_hit(w, comps)
-    Then c = color(0.1, 0.1, 0.1)
+    And world_c is a shade_hit(w, comps)
+    Then world_c = color(0.1, 0.1, 0.1)
 
 #  Scenario: The reflected color for a nonreflective material
 #    Given w is a default_world()

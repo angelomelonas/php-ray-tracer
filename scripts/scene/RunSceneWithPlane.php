@@ -5,6 +5,9 @@ use PhpRayTracer\RayTracer\Camera\CameraFactory;
 use PhpRayTracer\RayTracer\Light\Light;
 use PhpRayTracer\RayTracer\Light\LightFactory;
 use PhpRayTracer\RayTracer\Matrix\MatrixFactory;
+use PhpRayTracer\RayTracer\Pattern\PatternFactory;
+use PhpRayTracer\RayTracer\Pattern\StripePattern;
+use PhpRayTracer\RayTracer\Shape\Plane;
 use PhpRayTracer\RayTracer\Shape\Shape;
 use PhpRayTracer\RayTracer\Shape\Sphere;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
@@ -16,13 +19,11 @@ require '../../vendor/autoload.php';
 $world = WorldFactory::create();
 $world->setLight(createWorldLight());
 $world->addShape(createFloor());
-$world->addShape(createLeftWall());
-$world->addShape(createRightWall());
 $world->addShape(createLargeSphere());
 $world->addShape(createSmallRightSphere());
 $world->addShape(createSmallLeftSphere());
 
-$camera = createCamera(400, 200, M_PI / 3);
+$camera = createCamera(100, 50, M_PI / 3);
 
 $startTime = microtime(true);
 
@@ -40,7 +41,7 @@ file_put_contents('scene.ppm', $ppm);
 
 function createFloor(): Shape
 {
-    $floor = new Sphere();
+    $floor = new Plane();
     $floor->setTransform(MatrixFactory::createScaling(10, 0.01, 10));
     $material = $floor->getMaterial();
     $material->setColor(ColorFactory::create(226/255,193/255,169/255));
@@ -49,45 +50,21 @@ function createFloor(): Shape
     return $floor;
 }
 
-function createLeftWall(): Shape
-{
-    $leftWall = new Sphere();
-    $translation = MatrixFactory::createTranslation(0, 0, 5);
-    $rotationY = MatrixFactory::createRotationY(-M_PI_4);
-    $rotationX = MatrixFactory::createRotationX(M_PI_2);
-    $scaling = MatrixFactory::createScaling(10, 0.01, 10);
-    $leftWall->setTransform($translation->multiplyMatrix($rotationY)->multiplyMatrix($rotationX)->multiplyMatrix($scaling));
-    $material = $leftWall->getMaterial();
-    $material->setColor(ColorFactory::create(243/255,222/255,201/255));
-    $material->setSpecular(0);
-
-    return $leftWall;
-}
-
-function createRightWall(): Shape
-{
-    $rightWall = new Sphere();
-    $translation = MatrixFactory::createTranslation(0, 0, 5);
-    $rotationY = MatrixFactory::createRotationY(M_PI_4);
-    $rotationX = MatrixFactory::createRotationX(M_PI_2);
-    $scaling = MatrixFactory::createScaling(10, 0.01, 10);
-    $rightWall->setTransform($translation->multiplyMatrix($rotationY)->multiplyMatrix($rotationX)->multiplyMatrix($scaling));
-    $material = $rightWall->getMaterial();
-    $material->setColor(ColorFactory::create(234/255,210/255,190/255));
-    $material->setSpecular(0);
-
-    return $rightWall;
-}
-
 function createLargeSphere(): Shape
 {
     $largeSphere = new Sphere();
     $translation = MatrixFactory::createTranslation(-0.5, 1, 0.5);
     $largeSphere->setTransform($translation);
+
+    $pattern = PatternFactory::createStripePattern(
+        ColorFactory::create(0.1, 1, 0.5),
+        ColorFactory::create(0.1, 0.5, 1)
+    );
     $material = $largeSphere->getMaterial();
     $material->setColor(ColorFactory::create(125/255,220/255,31/255));
     $material->setDiffuse(0.7);
-    $material->setSpecular(0.3);
+    $material->setspecular(0.3);
+    $material->setPattern($pattern);
 
     return $largeSphere;
 }
@@ -101,7 +78,7 @@ function createSmallRightSphere(): Shape
     $material = $smallRightSphere->getMaterial();
     $material->setColor(ColorFactory::create(1,165/255,0));
     $material->setDiffuse(0.7);
-    $material->setSpecular(0.3);
+    $material->setspecular(0.3);
 
     return $smallRightSphere;
 }
@@ -115,7 +92,7 @@ function createSmallLeftSphere(): Shape
     $material = $smallLeftSphere->getMaterial();
     $material->setColor(ColorFactory::create(1,37/255,0));
     $material->setDiffuse(0.7);
-    $material->setSpecular(0.3);
+    $material->setspecular(0.3);
 
     return $smallLeftSphere;
 }
