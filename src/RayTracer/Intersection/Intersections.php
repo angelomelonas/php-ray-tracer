@@ -10,7 +10,7 @@ use function usort;
 final class Intersections implements Countable
 {
     /** @param Intersection[] $intersections */
-    public function __construct(public array $intersections = [])
+    public function __construct(private array $intersections = [])
     {
         $this->sortIntersections();
     }
@@ -18,6 +18,12 @@ final class Intersections implements Countable
     public function get(int $index): Intersection
     {
         return $this->intersections[$index];
+    }
+
+    /** @return Intersection[] */
+    public function getAll(): array
+    {
+        return $this->intersections;
     }
 
     public function add(Intersection $intersection): void

@@ -19,6 +19,9 @@ final class Material
         private float $diffuse = 0.9,
         private float $specular = 0.9,
         private float $shininess = 200.0,
+        private float $reflective = 0.0, // TODO: maybe rename to reflectiveIndex
+        private float $transparency = 0.0,
+        private float $refractiveIndex = 1.0,
         private ?Pattern $pattern = null,
     ) {
     }
@@ -73,6 +76,36 @@ final class Material
         $this->shininess = $shininess;
     }
 
+    public function getReflective(): float
+    {
+        return $this->reflective;
+    }
+
+    public function setReflective(float $reflective): void
+    {
+        $this->reflective = $reflective;
+    }
+
+    public function getTransparency(): float
+    {
+        return $this->transparency;
+    }
+
+    public function setTransparency(float $transparency): void
+    {
+        $this->transparency = $transparency;
+    }
+
+    public function getRefractiveIndex(): float
+    {
+        return $this->refractiveIndex;
+    }
+
+    public function setRefractiveIndex(float $refractiveIndex): void
+    {
+        $this->refractiveIndex = $refractiveIndex;
+    }
+
     public function getPattern(): ?Pattern
     {
         return $this->pattern;
@@ -84,8 +117,8 @@ final class Material
     }
 
     public function lighting(
-        Light $light,
         Shape $shape,
+        Light $light,
         Tuple $position,
         Tuple $eyeVector,
         Tuple $normalVector,

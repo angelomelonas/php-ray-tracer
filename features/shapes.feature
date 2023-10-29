@@ -17,7 +17,7 @@ Feature: Abstract Shapes
   Scenario: Assigning a material
     Given s is a test_shape()
     And m is a material()
-    And m.ambient is a 1
+    And m.ambient is 1
     When s.material is a m
     Then s.material = m
 
@@ -50,9 +50,9 @@ Feature: Abstract Shapes
     And n is a normal_at(s, point(0, √2/2, -√2/2))
     Then n = vector(0, 0.97014, -0.24254)
 
-#  Scenario: A shape has a parent attribute
-#    Given s is a test_shape()
-#    Then s.parent is nothing
+  Scenario: A shape has a parent attribute
+    Given s is a test_shape()
+    Then s.parent is nothing
 
 #  Scenario: Converting a point from world to object space
 #    Given g1 is a group()

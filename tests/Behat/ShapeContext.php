@@ -5,7 +5,6 @@ namespace PhpRayTracer\Tests\Behat;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Tester\Exception\PendingException;
 use PhpRayTracer\RayTracer\Intersection\Intersections;
 use PhpRayTracer\RayTracer\Material\MaterialFactory;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
@@ -16,6 +15,7 @@ use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PhpRayTracer\Tests\Behat\Utility\TestShape;
 use PHPUnit\Framework\Assert;
 use function assert;
+use function get_parent_class;
 use function sqrt;
 use const M_PI;
 
@@ -23,6 +23,8 @@ final class ShapeContext implements Context
 {
     public Shape $shapeA;
     public Shape $shapeB;
+    public Shape $shapeC;
+    public Shape $shapeD;
     public Tuple $normal;
     public Matrix $transformationMatrix;
 
@@ -58,13 +60,13 @@ final class ShapeContext implements Context
     /** @Given /^(xs)\[(\d+)\]\.object = (s)$/ */
     public function intersectionObjectAtIndexIsShape(string $expression, int $index): void
     {
-        Assert::assertSame($this->shapeA, $this->intersectionContext->intersections->get($index)->getObject());
+        Assert::assertSame($this->shapeA, $this->intersectionContext->intersections->get($index)->getShape());
     }
 
     /** @Then /^(s)\.transform = identity_matrix$/ */
     public function sTransformIsIdentityMatrix(): void
     {
-        $expected = MatrixFactory::createIdentity(MatrixFactory::MATRIX_4X4);
+        $expected = MatrixFactory::createIdentity();
         $actual = $this->shapeA->getTransform();
         Assert::assertTrue($expected->isEqualTo($actual));
     }
@@ -159,7 +161,7 @@ final class ShapeContext implements Context
         Assert::assertEquals(MaterialFactory::create(), $this->materialContext->material);
     }
 
-    /** @When /^(m)\.ambient is a (\d+)$/ */
+    /** @When /^(m)\.ambient is (\d+)$/ */
     public function mMaterialAmbientIs(string $expression, int $value): void
     {
         $this->materialContext->material->setAmbient($value);
@@ -200,6 +202,6 @@ final class ShapeContext implements Context
     /** @Then /^(s)\.parent is nothing$/ */
     public function sParentIsNothing(): void
     {
-        throw new PendingException();
+        Assert::assertTrue(get_parent_class($this->shapeA) === Shape::class);
     }
 }

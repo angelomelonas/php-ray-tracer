@@ -77,8 +77,8 @@ final class MaterialContext implements Context
     public function resultIsALightingMLightPositionEyevNormalv(): void
     {
         $this->colorResult = $this->material->lighting(
-            $this->lightContext->light,
             new TestShape(),
+            $this->lightContext->light,
             $this->tupleContext->tupleA,
             $this->tupleContext->tupleB,
             $this->tupleContext->tupleC,
@@ -90,8 +90,8 @@ final class MaterialContext implements Context
     public function resultIsALightingMLightPositionEyevNormalvInShadow(): void
     {
         $this->colorResult = $this->material->lighting(
-            $this->lightContext->light,
             new TestShape(),
+            $this->lightContext->light,
             $this->tupleContext->tupleA,
             $this->tupleContext->tupleB,
             $this->tupleContext->tupleC,
@@ -103,5 +103,23 @@ final class MaterialContext implements Context
     public function resultIsColor(string $expression, float $red, float $green, float $blue): void
     {
         Assert::assertTrue(ColorFactory::create($red, $green, $blue)->isEqualTo($this->colorResult));
+    }
+
+    /** @Then /^(m)\.reflective = ([-+]?\d*\.?\d+)$/ */
+    public function mReflective(string $expression, float $value): void
+    {
+        Assert::assertEquals($value, $this->material->getReflective());
+    }
+
+    /** @Then /^(m)\.transparency = ([-+]?\d*\.?\d+)$/ */
+    public function mTransparency(string $expression, float $value): void
+    {
+        $this->material->setTransparency($value);
+    }
+
+    /** @Given /^(m)\.refractive_index = ([-+]?\d*\.?\d+)$/ */
+    public function mRefractiveIndex(string $expression, float $value): void
+    {
+        $this->material->setRefractiveIndex($value);
     }
 }

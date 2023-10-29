@@ -13,9 +13,12 @@ use PhpRayTracer\RayTracer\Tuple\Color;
 use PhpRayTracer\RayTracer\Tuple\ColorFactory;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
 use function assert;
+use function sqrt;
 
 final class World
 {
+    public const DEFAULT_REFLECTION_RECURSION_DEPTH = 4;
+
     /** @var Shape[] */
     private array $shapes;
     private ?Light $light;
@@ -64,23 +67,35 @@ final class World
         return $intersections;
     }
 
-    public function shadeHit(Computation $computation): Color
+    public function shadeHit(Computation $computation, int $remaining = self::DEFAULT_REFLECTION_RECURSION_DEPTH): Color
     {
         assert($this->light !== null);
 
         $isShadowed = $this->isShadowed($computation->getOverPoint());
 
-        return $computation->getShape()->getMaterial()->lighting(
-            $this->light,
+        $surface = $computation->getShape()->getMaterial()->lighting(
             $computation->getShape(),
-            $computation->getPoint(),
+            $this->light,
+            $computation->getOverPoint(),
             $computation->getEyeVector(),
             $computation->getNormalVector(),
             $isShadowed
         );
+
+        $reflectedColor = $this->reflectedColor($computation, $remaining);
+        $refractedColor = $this->refractedColor($computation, $remaining);
+
+        $material = $computation->getShape()->getMaterial();
+        if ($material->getReflective() > 0.0 && $material->getTransparency() > 0.0) {
+            $reflectance = $computation->schlick();
+
+            return $surface->add($reflectedColor->multiply($reflectance))->add($refractedColor->multiply(1.0 - $reflectance));
+        }
+
+        return $surface->add($reflectedColor)->add($refractedColor);
     }
 
-    public function colorAt(Ray $ray): Color
+    public function colorAt(Ray $ray, int $remaining = self::DEFAULT_REFLECTION_RECURSION_DEPTH): Color
     {
         $intersections = $this->intersectWorld($ray);
         $hit = $intersections->hit();
@@ -89,9 +104,9 @@ final class World
             return ColorFactory::createBlack();
         }
 
-        $computation = $hit->prepareComputations($ray);
+        $computation = $hit->prepareComputations($ray, $intersections);
 
-        return $this->shadeHit($computation);
+        return $this->shadeHit($computation, $remaining);
     }
 
     public function isShadowed(Tuple $point): bool
@@ -108,5 +123,43 @@ final class World
         $hit = $intersections->hit();
 
         return $hit !== null && $hit->getT() < $distance;
+    }
+
+    public function reflectedColor(Computation $computation, int $remaining): Color
+    {
+        if ($remaining < 1) {
+            return ColorFactory::createBlack();
+        }
+
+        if ($computation->getShape()->getMaterial()->getReflective() === 0.0) {
+            return ColorFactory::createBlack();
+        }
+
+        $reflectRay = RayFactory::create($computation->getOverPoint(), $computation->getReflectVector());
+        $color = $this->colorAt($reflectRay, $remaining - 1);
+
+        return $color->multiply($computation->getShape()->getMaterial()->getReflective());
+    }
+
+    public function refractedColor(Computation $computation, int $remaining): Color
+    {
+        if ($remaining === 0) {
+            return ColorFactory::createBlack();
+        }
+
+        $nRatio = $computation->getN1() / $computation->getN2();
+        $cosI = $computation->getEyeVector()->dot($computation->getNormalVector());
+        $sin2T = ($nRatio ** 2) * (1 - ($cosI ** 2));
+
+        if ($sin2T > 1.0) {
+            return ColorFactory::createBlack();
+        }
+
+        $cosT = sqrt(1.0 - $sin2T);
+        $direction = $computation->getNormalVector()->multiply($nRatio * $cosI - $cosT)->subtract($computation->getEyeVector()->multiply($nRatio));
+        $refractRay = RayFactory::create($computation->getUnderPoint(), $direction);
+
+        return $this->colorAt($refractRay, $remaining - 1)
+            ->multiply($computation->getShape()->getMaterial()->getTransparency());
     }
 }

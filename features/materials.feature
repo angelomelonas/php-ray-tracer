@@ -55,14 +55,14 @@ Feature: Materials
     When result is a lighting(m, light, position, eyev, normalv, in_shadow)
     Then result = color(0.1, 0.1, 0.1)
 
-#  Scenario: Reflectivity for the default material
-#    Given m is a material()
-#    Then m.reflective = 0.0
+  Scenario: Reflectivity for the default material
+    Given m is a material()
+    Then m.reflective = 0.0
 
-#  Scenario: Transparency and Refractive Index for the default material
-#    Given m is a material()
-#    Then m.transparency = 0.0
-#    And m.refractive_index = 1.0
+  Scenario: Transparency and Refractive Index for the default material
+    Given m is a material()
+    Then m.transparency = 0.0
+    And m.refractive_index = 1.0
 
 #  Scenario: Lighting with a pattern applied
 #    Given m.pattern is a stripe_pattern(color(1, 1, 1), color(0, 0, 0))

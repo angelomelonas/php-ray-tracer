@@ -5,13 +5,20 @@ namespace PhpRayTracer\Tests\Behat;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use LogicException;
 use PhpRayTracer\RayTracer\Intersection\Intersection;
 use PhpRayTracer\RayTracer\Material\Material;
+use PhpRayTracer\RayTracer\Material\MaterialFactory;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
+use PhpRayTracer\RayTracer\Matrix\MatrixFactory;
 use PhpRayTracer\RayTracer\Shape\ShapeFactory;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PHPUnit\Framework\Assert;
+use function count;
+use function explode;
+use function floatval;
+use function trim;
 
 final class PlaneContext implements Context
 {
@@ -32,10 +39,24 @@ final class PlaneContext implements Context
         $this->rayContext = $environment->getContext(RayContext::class);
     }
 
-    /** @Given /^(p) is a plane\(\)$/ */
+    /** @Given /^(p|shape) is a plane\(\)$/ */
     public function pIsAPlane(): void
     {
         $this->createPlane();
+    }
+
+    /** @Given /^(plane|lower|upper) is a plane\(\) with:$/ */
+    public function shapeIsASPlaneWith(string $expression, TableNode $table): void
+    {
+        $material = MaterialFactory::create();
+        $reflectivity = $table->getRow(0)[1];
+        $material->setReflective(floatval($reflectivity));
+
+        $values = explode(', ', trim($table->getRow(1)[1], '()'));
+        [$x, $y, $z] = $values;
+        $transform = MatrixFactory::createTranslation(floatval($x), floatval($y), floatval($z));
+
+        $this->createPlane($material, $transform);
     }
 
     private function createPlane(?Material $material = null, ?Matrix $transform = null): void
@@ -57,6 +78,12 @@ final class PlaneContext implements Context
 
         if (! isset($this->shapeContext->shapeB)) {
             $this->shapeContext->shapeB = $newPlane;
+
+            return;
+        }
+
+        if (! isset($this->shapeContext->shapeC)) {
+            $this->shapeContext->shapeC = $newPlane;
 
             return;
         }
@@ -103,6 +130,34 @@ final class PlaneContext implements Context
     /** @Given /^(lxs)\[(\d+)\]\.object = (p)$/ */
     public function intersectionObjectAtIndexIsObject(string $expression, int $index): void
     {
-        Assert::assertSame($this->shapeContext->shapeA, $this->localIntersections[$index]->getObject());
+        Assert::assertSame($this->shapeContext->shapeA, $this->localIntersections[$index]->getShape());
+    }
+
+    /** @Given /^(floor) is a plane\(\) with:$/ */
+    public function floorIsAPlaneWith(string $expression, TableNode $table): void
+    {
+        $material = MaterialFactory::create();
+
+        $values = explode(', ', trim($table->getRow(0)[1], '()'));
+        [$x, $y, $z] = $values;
+        $transform = MatrixFactory::createTranslation(floatval($x), floatval($y), floatval($z));
+
+        for ($i = 1; $i < count($table->getLines()); $i++) {
+            $row = $table->getRow($i);
+
+            if ($row[0] === 'material.reflective') {
+                $material->setReflective(floatval($row[1]));
+            }
+
+            if ($row[0] === 'material.transparency') {
+                $material->setTransparency(floatval($row[1]));
+            }
+
+            if ($row[0] === 'material.refractive_index') {
+                $material->setRefractiveIndex(floatval($row[1]));
+            }
+        }
+
+        $this->createPlane($material, $transform);
     }
 }
