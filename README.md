@@ -1,15 +1,17 @@
-# Basic PHP Project Setup
+# The Ray Tracer Challenge (in PHP!)
 
-This is a basic project skeleton for a simple PHP Project using a few Symfony components. 
-The basic setup includes:
+This project follows [The Ray Tracer Challenge](http://raytracerchallenge.com/) by Jamis Buck.
+
+## Setup
+
+This project is a simple PHP Project using a few Symfony components. 
+The basic project setup includes:
 
 - PHPUnit for unit testing
 - Behat for BDD/acceptance testing
 - PHPStan for static analysis
 - PHP CS Fixer for code cleanup
 - Makefile for running tests and static analysis
-
-## Setup
 
 ### Requirements
 
