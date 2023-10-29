@@ -16,6 +16,7 @@ default:
         - PhpRayTracer\Tests\Behat\ShapeContext
         - PhpRayTracer\Tests\Behat\PlaneContext
         - PhpRayTracer\Tests\Behat\PatternContext
+        - PhpRayTracer\Tests\Behat\CubeContext
 
   extensions:
     FriendsOfBehat\SymfonyExtension:

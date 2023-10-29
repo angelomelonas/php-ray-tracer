@@ -5,6 +5,7 @@ namespace PhpRayTracer\Tests\Behat;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use PhpRayTracer\RayTracer\Intersection\Intersection;
 use PhpRayTracer\RayTracer\Intersection\Intersections;
 use PhpRayTracer\RayTracer\Material\MaterialFactory;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
@@ -21,6 +22,9 @@ use const M_PI;
 
 final class ShapeContext implements Context
 {
+    /** @var Intersection[] */
+    private array $localIntersections;
+
     public Shape $shapeA;
     public Shape $shapeB;
     public Shape $shapeC;
@@ -203,5 +207,35 @@ final class ShapeContext implements Context
     public function sParentIsNothing(): void
     {
         Assert::assertTrue(get_parent_class($this->shapeA) === Shape::class);
+    }
+
+    /** @When /^(lxs) is a local_intersect\((p|c), (r)\)$/ */
+    public function xsIsALocalIntersectPR(): void
+    {
+        $this->localIntersections = $this->shapeA->intersect($this->rayContext->rayA);
+    }
+
+    /** @Then /^(lxs) is empty$/ */
+    public function xsIsEmpty(): void
+    {
+        Assert::assertEmpty($this->localIntersections);
+    }
+
+    /** @Then /^(lxs)\.count = (\d+)$/ */
+    public function intersectionCount(string $expression, int $count): void
+    {
+        Assert::assertCount($count, $this->localIntersections);
+    }
+
+    /** @Given /^(lxs)\[(\d+)\]\.t = ([-+]?\d*\.?\d+)$/ */
+    public function intersectionObjectAtIndexIsT(string $expression, int $index, float $value): void
+    {
+        Assert::assertSame($value, $this->localIntersections[$index]->getT());
+    }
+
+    /** @Given /^(lxs)\[(\d+)\]\.object = (p)$/ */
+    public function intersectionObjectAtIndexIsObject(string $expression, int $index): void
+    {
+        Assert::assertSame($this->shapeA, $this->localIntersections[$index]->getShape());
     }
 }
