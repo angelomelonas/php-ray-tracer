@@ -13,6 +13,7 @@ use PhpRayTracer\RayTracer\Ray\RayFactory;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
 use PHPUnit\Framework\Assert;
+use function sqrt;
 
 final class RayContext implements Context
 {
@@ -53,6 +54,24 @@ final class RayContext implements Context
     {
         $point = TupleFactory::createPoint($x1, $y1, $z1);
         $vector = TupleFactory::createVector($x2, $y2, $z2);
+
+        $this->createRay($point, $vector);
+    }
+
+    /** @Given /^(r) is a ray\(point\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\), vector\((0), (\-√2\/2), (√2\/2)\)\)$/ */
+    public function rIsARayPoint1Vector222(string $expression, float $x1, float $y1, float $z1): void
+    {
+        $point = TupleFactory::createPoint($x1, $y1, $z1);
+        $vector = TupleFactory::createVector(0, -sqrt(2) / 2, sqrt(2) / 2);
+
+        $this->createRay($point, $vector);
+    }
+
+    /** @Given /^(r) is a ray\(point\((0), (0), (√2\/2)\), vector\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)\)$/ */
+    public function rIsARayPoint22Vector0(string $expression): void
+    {
+        $point = TupleFactory::createPoint(0, 0, sqrt(2) / 2);
+        $vector = TupleFactory::createVector(0, 1, 0);
 
         $this->createRay($point, $vector);
     }

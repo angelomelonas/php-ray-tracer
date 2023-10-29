@@ -118,12 +118,12 @@ Feature: Spheres
   Scenario: A sphere may be assigned a material
     Given s is a sphere()
     And m is a material()
-    And m.ambient is a 1
+    And m.ambient is 1
     When s.material is a m
     Then s.material = m
 
-#  Scenario: A helper for producing a sphere with a glassy material
-#    Given s is a glass_sphere()
-#    Then s.transform = identity_matrix
-#    And s.material.transparency = 1.0
-#    And s.material.refractive_index = 1.5
+  Scenario: A helper for producing a sphere with a glassy material
+    Given s is a glass_sphere()
+    Then s.transform = identity_matrix
+    And s.material.transparency = 1.0
+    And s.material.refractive_index = 1.5
