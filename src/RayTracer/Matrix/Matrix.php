@@ -161,8 +161,12 @@ final class Matrix
 
     public function inverse(): Matrix
     {
-        $determinant = $this->determinant();
+        if (! $this->invertible()) {
+            throw new LogicException('Matrix is not invertible.');
+        }
+
         $newMatrix = MatrixFactory::create($this->size);
+        $determinant = $this->determinant();
 
         for ($row = 0; $row < $this->size; $row++) {
             for ($column = 0; $column < $this->size; $column++) {
