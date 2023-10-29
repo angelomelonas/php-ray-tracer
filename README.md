@@ -2,32 +2,42 @@
 
 This project follows [The Ray Tracer Challenge](http://raytracerchallenge.com/) by Jamis Buck.
 
-## Example Renders (Coming Soon)
+PHP is definitely not the ideal language for implementing a ray tracer. 
+However, it is still a great way to learn the basic concepts, which I will use as a stepping stone to learn other languages in the future.
+
+## Example Renders
+
+- Coming soon...
 
 ## Chapters
 
 ### Implemented 
 
-- Chapter 1
-- Chapter 2
-- Chapter 3
-- Chapter 4
-- Chapter 5
-- Chapter 6
-- Chapter 7
-- Chapter 8
-- Chapter 9
-- Chapter 10
-- Chapter 11
-- Chapter 12
+- Chapter 1: Tuples, Points and Vectors
+- Chapter 2: Drawing on a Canvas
+- Chapter 3: Matrices
+- Chapter 4: Matrix Transformations
+- Chapter 5: Ray-Sphere Intersections
+- Chapter 6: Light and Shading
+- Chapter 7: Making a Scene
+- Chapter 8: Shadows
+- Chapter 9: Planes
+- Chapter 10: Patterns
+- Chapter 11: Reflections and Refraction
+- Chapter 12: Cubes
 
 ### Todo
 
-- Chapter 13
-- Chapter 14
-- Chapter 15
-- Chapter 16
-- Chapter 17
+- Chapter 13: Cylinders
+- Chapter 14: Groups
+- Chapter 15: Triangles
+- Chapter 16: Constructive Solid Geometry (CSG)
+- Chapter 17: Nex Steps
+
+#### Bonus (Optional)
+- [Rendering Soft Shadows](http://raytracerchallenge.com/bonus/area-light.html)
+- [Bounding Boxes and Hierarchies](http://raytracerchallenge.com/bonus/bounding-boxes.html)
+- [Texture Mapping](http://raytracerchallenge.com/bonus/texture-mapping.html)
 
 ## Setup
 
