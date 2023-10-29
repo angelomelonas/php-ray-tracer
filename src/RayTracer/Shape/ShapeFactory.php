@@ -14,4 +14,9 @@ final class ShapeFactory
     {
         return new Plane();
     }
+
+    public static function createCube(): Cube
+    {
+        return new Cube();
+    }
 }

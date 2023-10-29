@@ -7,7 +7,6 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use LogicException;
-use PhpRayTracer\RayTracer\Intersection\Intersection;
 use PhpRayTracer\RayTracer\Material\Material;
 use PhpRayTracer\RayTracer\Material\MaterialFactory;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
@@ -22,11 +21,7 @@ use function trim;
 
 final class PlaneContext implements Context
 {
-    /** @var Intersection[] */
-    private array $localIntersections;
-
     private ShapeContext $shapeContext;
-    private RayContext $rayContext;
 
     /** @BeforeScenario */
     public function gatherContexts(BeforeScenarioScope $scope): void
@@ -35,8 +30,6 @@ final class PlaneContext implements Context
 
         /* @phpstan-ignore-next-line */
         $this->shapeContext = $environment->getContext(ShapeContext::class);
-        /* @phpstan-ignore-next-line */
-        $this->rayContext = $environment->getContext(RayContext::class);
     }
 
     /** @Given /^(p|shape) is a plane\(\)$/ */
@@ -101,36 +94,6 @@ final class PlaneContext implements Context
     {
         $actual = $this->shapeContext->shapeA->normalAt(TupleFactory::createPoint($x, $y, $z));
         Assert::assertTrue(TupleFactory::createVector($x, $y, $z)->isEqualTo($actual));
-    }
-
-    /** @When /^(lxs) is a local_intersect\((p), (r)\)$/ */
-    public function xsIsALocalIntersectPR(): void
-    {
-        $this->localIntersections = $this->shapeContext->shapeA->intersect($this->rayContext->rayA);
-    }
-
-    /** @Then /^(lxs) is empty$/ */
-    public function xsIsEmpty(): void
-    {
-        Assert::assertEmpty($this->localIntersections);
-    }
-
-    /** @Then /^(lxs)\.count = (\d+)$/ */
-    public function intersectionCount(string $expression, int $count): void
-    {
-        Assert::assertCount($count, $this->localIntersections);
-    }
-
-    /** @Given /^(lxs)\[(\d+)\]\.t = ([-+]?\d*\.?\d+)$/ */
-    public function intersectionObjectAtIndexIsT(string $expression, int $index, float $value): void
-    {
-        Assert::assertSame($value, $this->localIntersections[$index]->getT());
-    }
-
-    /** @Given /^(lxs)\[(\d+)\]\.object = (p)$/ */
-    public function intersectionObjectAtIndexIsObject(string $expression, int $index): void
-    {
-        Assert::assertSame($this->shapeContext->shapeA, $this->localIntersections[$index]->getShape());
     }
 
     /** @Given /^(floor) is a plane\(\) with:$/ */
