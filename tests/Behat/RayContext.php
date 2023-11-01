@@ -58,6 +58,14 @@ final class RayContext implements Context
         $this->createRay($point, $vector);
     }
 
+    /** @Given /^(r) is a ray\(point\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\), (direction)\)$/ */
+    public function rIsARayWithAOriginAndNormalizedDirection(string $expression, float $x, float $y, float $z): void
+    {
+        $point = TupleFactory::createVector($x, $y, $z);
+
+        $this->createRay($point, $this->tupleContext->tupleA);
+    }
+
     /** @Given /^(r) is a ray\(point\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\), vector\((0), (\-√2\/2), (√2\/2)\)\)$/ */
     public function rIsARayPoint1Vector222(string $expression, float $x1, float $y1, float $z1): void
     {

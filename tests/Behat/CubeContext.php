@@ -9,8 +9,6 @@ use LogicException;
 use PhpRayTracer\RayTracer\Material\Material;
 use PhpRayTracer\RayTracer\Matrix\Matrix;
 use PhpRayTracer\RayTracer\Shape\ShapeFactory;
-use PhpRayTracer\RayTracer\Tuple\TupleFactory;
-use PHPUnit\Framework\Assert;
 
 final class CubeContext implements Context
 {
@@ -34,16 +32,10 @@ final class CubeContext implements Context
         $this->createCube();
     }
 
-    /** @When /^(normal) is a local_normal_at\((c),( p)\)$/ */
+    /** @When /^(normal) is a local_normal_at\((c), (p)\)$/ */
     public function normalIsALocalNormalAtCP(): void
     {
-    }
-
-    /** @Then /^(normal) = vector\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
-    public function normalIs(string $expression, float $x, float $y, float $z): void
-    {
-        $actual = $this->shapeContext->shapeA->normalAt($this->tupleContext->tupleA);
-        Assert::assertTrue(TupleFactory::createVector($x, $y, $z)->isEqualTo($actual));
+        $this->tupleContext->tupleA = $this->shapeContext->shapeA->normalAt($this->tupleContext->tupleA);
     }
 
     private function createCube(?Material $material = null, ?Matrix $transform = null): void

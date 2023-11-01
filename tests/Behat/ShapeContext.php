@@ -13,6 +13,7 @@ use PhpRayTracer\RayTracer\Matrix\MatrixFactory;
 use PhpRayTracer\RayTracer\Shape\Shape;
 use PhpRayTracer\RayTracer\Tuple\Tuple;
 use PhpRayTracer\RayTracer\Tuple\TupleFactory;
+use PhpRayTracer\RayTracer\Utility\Utility;
 use PhpRayTracer\Tests\Behat\Utility\TestShape;
 use PHPUnit\Framework\Assert;
 use function assert;
@@ -36,6 +37,8 @@ final class ShapeContext implements Context
     private MaterialContext $materialContext;
     private IntersectionContext $intersectionContext;
 
+    private TupleContext $tupleContext;
+
     /** @BeforeScenario */
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
@@ -47,6 +50,8 @@ final class ShapeContext implements Context
         $this->materialContext = $environment->getContext(MaterialContext::class);
         /* @phpstan-ignore-next-line */
         $this->intersectionContext = $environment->getContext(IntersectionContext::class);
+        /* @phpstan-ignore-next-line */
+        $this->tupleContext = $environment->getContext(TupleContext::class);
     }
 
     /** @Given /^(s) is a test_shape\(\)$/ */
@@ -209,7 +214,7 @@ final class ShapeContext implements Context
         Assert::assertTrue(get_parent_class($this->shapeA) === Shape::class);
     }
 
-    /** @When /^(lxs) is a local_intersect\((p|c), (r)\)$/ */
+    /** @When /^(lxs) is a local_intersect\((p|c|cyl), (r)\)$/ */
     public function xsIsALocalIntersectPR(): void
     {
         $this->localIntersections = $this->shapeA->intersect($this->rayContext->rayA);
@@ -230,12 +235,18 @@ final class ShapeContext implements Context
     /** @Given /^(lxs)\[(\d+)\]\.t = ([-+]?\d*\.?\d+)$/ */
     public function intersectionObjectAtIndexIsT(string $expression, int $index, float $value): void
     {
-        Assert::assertSame($value, $this->localIntersections[$index]->getT());
+        Assert::assertEqualsWithDelta($value, $this->localIntersections[$index]->getT(), Utility::PRECISION_TEST);
     }
 
     /** @Given /^(lxs)\[(\d+)\]\.object = (p)$/ */
     public function intersectionObjectAtIndexIsObject(string $expression, int $index): void
     {
         Assert::assertSame($this->shapeA, $this->localIntersections[$index]->getShape());
+    }
+
+    /** @Then /^(normal) = vector\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)$/ */
+    public function normalIs(string $expression, float $x, float $y, float $z): void
+    {
+        Assert::assertTrue(TupleFactory::createVector($x, $y, $z)->isEqualTo($this->tupleContext->tupleA));
     }
 }

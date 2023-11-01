@@ -158,9 +158,16 @@ final class TupleContext implements Context
         Assert::assertTrue(TupleFactory::createVector(1 / sqrt($x), 2 / sqrt($y), 3 / sqrt($z))->isEqualTo($result));
     }
 
-    /** @When /^norm is a normalize\(([^"]+)\)$/ */
+    /** @When /^(norm) is a normalize\(([^"]+)\)$/ */
     public function normIsANormalizeV(): void
     {
+        $this->tupleA = $this->tupleA->normalize();
+    }
+
+    /** @When /^(direction) is a normalize\(vector\(([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+), ([-+]?\d*\.?\d+)\)\)$/ */
+    public function directionIsANormalizeV(string $expression, float $x, float $y, float $z): void
+    {
+        $this->createTuple($x, $y, $z, Tuple::VECTOR);
         $this->tupleA = $this->tupleA->normalize();
     }
 

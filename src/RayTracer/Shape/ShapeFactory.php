@@ -19,4 +19,9 @@ final class ShapeFactory
     {
         return new Cube();
     }
+
+    public static function createCylinder(): Cylinder
+    {
+        return new Cylinder();
+    }
 }
